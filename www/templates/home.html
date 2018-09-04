@@ -1,0 +1,34 @@
+<!--
+  This template loads for the 'home' state (app.js)
+  'posts' is a $scope variable come from Home controller
+-->
+
+
+
+<ion-view view-title="Home" cache-view="false">
+ <ion-nav-buttons side="right">
+            <button class="button" ng-disabled="isToday()" ng-click="today()">Today</button>
+            <button class="button" ng-click="changeMode('month')">M</button>
+            <button class="button" ng-click="changeMode('week')">W</button>
+            <button class="button" ng-click="changeMode('day')">D</button>
+            <button class="button" ng-click="loadEvents()">Load Events</button>
+        </ion-nav-buttons>
+
+        <ion-content scroll="false" class="main-content">  
+            
+            <h5 style="text-align: center;">{{viewTitle}}</h5>
+         
+<calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-source="calendar.eventSource"
+                      range-changed="reloadSource(startTime, endTime)"
+                      event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)"
+                      time-selected="onTimeSelected(selectedTime, events, disabled)" step="30"></calendar>
+      
+  <div style="position: absolute; bottom: 0px; width: 100%">
+        <div style="text-align: center">
+			<h5 style="background-color:#323232; color:#ffffff; padding: 5px; margin-bottom: -1%;"> Tasks for: {{chosen | date:"EEE,d, MMM y"}}</h5>
+          <button class="button button-block button-positive" ng-click="addevent(selectedTime);">Add a New Task</button>
+        </div>
+    </div>
+
+  </ion-content>
+</ion-view>

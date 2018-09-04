@@ -5,41 +5,101 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
-    <link rel="manifest" href="manifest.json">
 
-    <!-- un-comment this code to enable service worker
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(() => console.log('service worker installed'))
-          .catch(err => console.log('Error', err));
-      }
-    </script>-->
-
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
-    -->
-
+    
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+<script src="lib/ngstorage/ngStorage.min.js"></script>
+<script src="lib/angular-cookies/angular-cookies.min.js"></script>
+    <!-- angular-nl2br js -->
+    <script src="lib/angular-nl2br/angular-nl2br.min.js"></script>
 
+<script src="https://code.angularjs.org/1.2.0/angular-animate.min.js" ></script>
+
+    <!-- elastic js-->
+    <script src="lib/angular-elastic/elastic.js"></script>
+<script src="lib/angular-animate/angular-animate.min.js"></script>
     <!-- cordova script (this will be a 404 during development) -->
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+   
+      
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
-  </head>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+   
+   
+       <link rel="stylesheet" href="http://code.ionicframework.com/1.1.1/css/ionic.min.css"/>
+<link rel="stylesheet" href="lib/ionic-calendar/dist/css/calendar.min.css"/>
+<script src="http://code.ionicframework.com/1.1.1/js/ionic.bundle.min.js"></script>
+<script src="lib/ionic-calendar/dist/js/calendar-tpls.min.js"></script>
+    
+   
+    </head>
   <body ng-app="starter">
+    <ion-side-menus>
 
-    <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">Ionic Blank Starter</h1>
-      </ion-header-bar>
-      <ion-content>
-      </ion-content>
-    </ion-pane>
+      <!-- Center content -->
+      <ion-side-menu-content>
+        <ion-nav-bar class="bar-positive" align-title="center">
+          <!-- Back button -->
+         <ion-nav-back-button>
+            Back
+          </ion-nav-back-button> 
+
+          <!-- Burger button -->
+          <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+            </button>
+          </ion-nav-buttons>
+
+          <!-- Cart button -->
+         
+        </ion-nav-bar>
+
+        <!-- Main view content -->
+        <ion-nav-view animation="slide-left-right"></ion-nav-view>
+      </ion-side-menu-content>
+
+      <!-- Left menu -->
+      <ion-side-menu side="left">
+        <ion-content>
+
+          <!-- User profile -->
+          <div class="text-center" ng-repeat = "user1 in me">
+            <a href="#/user/{{user1.userId}}">
+            <!--  <img class="profile-picture" menu-close="" src="{{user1.userPic}}"> -->
+              <h4>{{user1.userFullName}}</h4>
+            </a>
+          </div>
+
+          
+
+          <!-- Menu -->
+          <div class="list" menu-close="">
+            <div class="item item-icon-left" ui-sref="home({reload: true})">
+              <i class="icon ion-ios-home-outline"></i>
+              Home
+            </div>
+			
+
+           
+       
+            
+            <div class="item item-icon-left" ng-click="logout(user1.token)" ng-repeat="user1 in me" ng-controller="AuthCtrl">
+              <i class="icon ion-log-out"></i>
+              Logout
+            </div>
+          </div>
+
+        </ion-content>
+
+      </ion-side-menu>
+
+    </ion-side-menus>
   </body>
 </html>
