@@ -5,7 +5,7 @@ angular.module('starter.controllers', [])
 .controller('AuthCtrl', function($scope, $ionicHistory, $ionicSideMenuDelegate, $q, UserService, $ionicLoading, AuthService, $state, $cookies, $rootScope, $location,$http) {
 	
   $scope.login = function(user){
-  	alert('load');
+  	//alert('load');
     $ionicLoading.show({
       template: 'Logging in ...'
     }),
@@ -62,16 +62,20 @@ angular.module('starter.controllers', [])
   
 })
 // Home controller
-.controller('HomeCtrl', function($scope, $state, UserService, AuthService, $ionicActionSheet, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $rootScope, $cordovaFacebook) {
+.controller('HomeCtrl', function($scope, $state, UserService, AuthService, $ionicActionSheet, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $rootScope) {
 	$scope.calendar = {};
         
 	
 		$scope.getEvents =function()
 	{
-			$rootScope.me =  JSON.parse(window.localStorage.user || '{}');
-			//console.log($rootScope.me);
+		$rootScope.me = {};
+		if (window.localStorage.user)
+		{
+			$rootScope.me =  JSON.parse(window.localStorage.user);
+			console.log($rootScope.me);
 		var token = $rootScope.me['0'].token;
 		console.log(token);
+	}
 			console.log("http://moshfitness.london/diary/getuserevent.php?token="+token);
 		$http.get("http://moshfitness.london/diary/getuserevent.php?token="+token)
     .then(function (response) {
@@ -86,6 +90,7 @@ angular.module('starter.controllers', [])
 				}
 			$scope.calendar.eventSource = $scope.event; 
 			console.log($scope.calendar.eventSource);
+
 		});
 	};
 	

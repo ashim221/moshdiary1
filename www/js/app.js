@@ -5,25 +5,11 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter.services', 'nl2br', 'monospaced.elastic', 'ngSanitize', 'ngStorage', 'ngCookies','ui.rCalendar'])
+angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter.services', 'nl2br', 'monospaced.elastic','ngStorage', 'ngCookies','ui.rCalendar'])
 .run(function($ionicPlatform, AuthService, $state,$ionicLoading) {
   $ionicPlatform.ready(function() {
 	 
-	  AuthService.userIsLoggedIn().then(function(response)
-	  {
-		  if (response === true)
-		  {
-		  console.log(response);
-          // success 
-		  $state.go('home',{}, {reload:true});
-      $ionicLoading.hide();
-		  }
-		  else
-		  {
-	  $state.go('login');
-      $ionicLoading.hide();  
-		  }
-    });
+	  
 	  
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -36,6 +22,22 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    AuthService.userIsLoggedIn().then(function(response)
+    {
+      if (response === true)
+      {
+      console.log(response);
+          // success 
+      $state.go('home',{}, {reload:true});
+      $ionicLoading.hide();
+      }
+      else
+      {
+    $state.go('login');
+      $ionicLoading.hide();  
+      }
+    });
   });
 })
 
@@ -109,6 +111,6 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
     controller: 'UserCtrl'
   })
     // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/home');
+  $urlRouterProvider.otherwise('/login');
 
 });

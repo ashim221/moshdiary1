@@ -128,6 +128,7 @@ angular.module('starter.services', [])
 		if (!tok)
 		{
 			isLoggedIn = false;
+			console.log('false');
 		}
 		else
 		{
