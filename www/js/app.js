@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter.services', 'nl2br', 'monospaced.elastic','ngStorage', 'ngCookies','ui.rCalendar'])
-.run(function($ionicPlatform, AuthService, $state,$ionicLoading) {
+.run(function($ionicPlatform, AuthService, $state,$ionicLoading, $rootScope) {
   $ionicPlatform.ready(function() {
 	 
 	  
@@ -30,6 +30,7 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
       console.log(response);
           // success 
       $state.go('home',{}, {reload:true});
+      $rootScope.backbutton = false; 
       $ionicLoading.hide();
       }
       else
@@ -110,7 +111,17 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
     templateUrl: 'templates/user.html',
     controller: 'UserCtrl'
   })
+
+  // User profile
+  .state('notifications', {
+    url: '/notifications',
+    templateUrl: 'templates/notifications.html',
+    controller: 'NotificationCtrl'
+  })
     // if none of the above states are matched, use this as the fallback
+
+    
   $urlRouterProvider.otherwise('/login');
+
 
 });

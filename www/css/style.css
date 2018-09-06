@@ -26,7 +26,7 @@
 }
 
 .login-bg {
-  background: url("../img/bg/mountain.jpg") no-repeat center;
+  background: url("../img/bg/run.jpg") no-repeat center;
   background-size: 100% 100%; }
 /* 
  * make the content's top changes animate.
@@ -86,7 +86,9 @@
 .error
 {
 	color:#E43C3F;
-	font-size:14px;
+	font-size:18px;
+  background-color: #fff;
+  padding: 5px;
 }
 
 /* Style the list */

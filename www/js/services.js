@@ -27,7 +27,34 @@ angular.module('starter.services', [])
        };
   
   })
+.service('NotificationService', function($q, $http, $httpParamSerializerJQLike, $cookies, $rootScope, $cookieStore, $cordovaFacebook, $ionicLoading, $state){
 
+this.getNotifications = function(tok){
+	console.log(tok);
+	  var deferred = $q.defer();
+	$http({
+    method: 'POST',
+    url: 'http://moshfitness.london/diary/getnotifications.php',
+    data: $httpParamSerializerJQLike({
+	  "token":tok
+  }),
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+}).success(function (response) {
+	if (!response.errors)
+	{
+		console.log(response);
+		deferred.resolve(response);
+		
+	}
+	else
+	{
+		console.log(response);
+	}
+});
+    return deferred.promise;
+       };
+
+})
 
   
   
@@ -53,26 +80,28 @@ angular.module('starter.services', [])
 
   this.doSignup = function(user){
     var deferred = $q.defer();
+    console.log(user);
 	$http({
   method: 'POST',
   url: 'http://moshfitness.london/diary/register_users.php',
   data: $httpParamSerializerJQLike({
 	  "name":user.name,
       "email":user.email,
-      "password":user.password
+      "password":user.password,
+      "location":user.location
   }),
   headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 }).success(function (response) {
 	if (!response.errors)
 	{
-		auth.data.header = {headers: {'token': response.data.token}};
-		$cookies.put("token", response.data.token, 365);
-		auth.data.user = response.data;
+		//auth.data.header = {headers: {'token': response.data.token}};
+		//$cookies.put("token", response.data.token, 365);
+		//auth.data.user = response.data;
 		//alert(response.data);
-		window.localStorage.setItem('token', response.data.token);
-		window.localStorage.user = '';
-		window.localStorage.user = JSON.stringify(auth.data.user);
-		console.log (auth.data.user);
+		//window.localStorage.setItem('token', response.data.token);
+		//window.localStorage.user = '';
+		//window.localStorage.user = JSON.stringify(auth.data.user);
+		//console.log (auth.data.user);
 		deferred.resolve(response.data);
 	}
 	else
@@ -197,6 +226,7 @@ this.doLogin = function(user){
 		auth.data.user = response.data;
 		window.localStorage.setItem('token', response.data.token);
 		window.localStorage.user = JSON.stringify(auth.data.user);
+		$rootScope.me =  JSON.parse(window.localStorage.user);
 		console.log (auth.data.user);
 		deferred.resolve(response.data);
 	}
@@ -314,7 +344,7 @@ this.getEvents = function(token){
 	if (!response.errors)
 	{
 		window.localStorage.clear();
-		window.localStorage.user = JSON.stringify();
+		//window.localStorage.user = JSON.stringify();
 		deferred.resolve(response.data);
 	}
 	else
