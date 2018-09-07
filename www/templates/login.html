@@ -8,7 +8,9 @@
       <h2 class="light">Mosh Fitness</h2>
       <h1 class="light">Diary</h1>
     </div>
-
+    <div ng-show="errors">
+      <p class="error" ng-repeat="error in errors" style="text-align: center;"><b><big> {{error.msg}}</big></b></p>
+    </div>
     <!-- Login form -->
     <form name="login_form" class="form-container" novalidate>
     <div class="list list-inset transparent-form">
@@ -22,7 +24,7 @@
       </label>
     </div>
     <div class="padding">
-      <button class="button button-block button-positive" ng-click="login(user)">
+      <button class="button button-block button-positive" ng-click="login(user)" ng-disabled="login_form.$invalid">
         Login
       </button>
     </div>
@@ -38,8 +40,6 @@
         <a ui-sref="register" class="light">New here? Sign up</a>
       </div>
     </div>
-     <div ng-show="errors">
-      <p class="error" ng-repeat="error in errors"><b>[{{error.code}}]</b> {{error.msg}}</p>
-    </div>
+     
   </ion-content>
 </ion-view>

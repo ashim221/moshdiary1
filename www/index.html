@@ -33,6 +33,7 @@
    
    
        <link rel="stylesheet" href="http://code.ionicframework.com/1.1.1/css/ionic.min.css"/>
+       <link rel="stylesheet" href="css/style.css"/>
 <link rel="stylesheet" href="lib/ionic-calendar/dist/css/calendar.min.css"/>
 <script src="http://code.ionicframework.com/1.1.1/js/ionic.bundle.min.js"></script>
 <script src="lib/ionic-calendar/dist/js/calendar-tpls.min.js"></script>
@@ -40,13 +41,13 @@
    
     </head>
   <body ng-app="starter">
-    <ion-side-menus>
+    <ion-side-menus enable-menu-with-back-views="true">
 
       <!-- Center content -->
-      <ion-side-menu-content>
-        <ion-nav-bar class="bar-positive" align-title="center">
+      <ion-side-menu-content >
+        <ion-nav-bar class="bar-positive bar-stable" align-title="center">
           <!-- Back button -->
-         <ion-nav-back-button>
+         <ion-nav-back-button ng-hide="!backbutton">
             Back
           </ion-nav-back-button> 
 
@@ -84,7 +85,15 @@
               <i class="icon ion-ios-home-outline"></i>
               Home
             </div>
-			
+             <div class="item item-icon-left" ui-sref="notifications" ng-if="user1.userType==='admin'" ng-repeat = "user1 in me">
+              <i class="icon ion-ios-bell-outline"></i>
+              Notifications
+              <span class="badge badge-assertive" ng-if="user1.notification>0">{{user1.notification}}</span>
+            </div>
+			 <div class="item item-icon-left" ui-sref="adduser" ng-if="user1.userType==='admin'" ng-repeat = "user1 in me">
+               <i class="icon ion-plus"></i>
+             Add New User
+            </div>
 
            
        

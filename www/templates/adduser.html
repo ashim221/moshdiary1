@@ -1,12 +1,9 @@
-<ion-view view-title="Login" hide-nav-bar="true" class="login-bg">
+<ion-view view-title="Add New User">
   <ion-content>
     <!-- Logo -->
     <div class="padding text-center">
-      <h1>
-        <img src="img/logo.png" width="120px">
-      </h1>
-      <h2 class="light">Mosh Fitness</h2>
-      <h1 class="light">Diary</h1>
+      
+      <h2 class="dark">Add New User</h2>
     </div>
     <div ng-show="errors">
       <p class="error" ng-repeat="error in errors" style="text-align: center;"><b><big> {{error.msg}}</big></b></p>
@@ -32,8 +29,8 @@
       </label>
     </div>
     <div class="padding">
-      <button class="button button-block button-positive" ng-click="signup(data)" ng-disabled="signup_form.$invalid">
-        Create account
+      <button class="button button-block button-positive" ng-click="adduser(data)" ng-disabled="signup_form.$invalid">
+        Add New User
       </button>
     </div>
 </form>

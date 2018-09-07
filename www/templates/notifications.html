@@ -1,0 +1,32 @@
+<!--
+  This template loads for the 'notifications' state (app.js)
+  'notifications' is a $scope variable created in the 'NotificationsCtrl' controller (controllers.js)
+  The NotificationsCtrl pulls data from the Notifications service (service.js)
+  The Notifications service returns an array of notifications data
+-->
+<ion-view view-title="Notifications">
+  <ion-content>
+    <div class="list notifications-list">
+      <div class="item no-border" ng-repeat="notification in notifications">
+        <div class="item-body">
+
+          
+          <span class="item-label balanced-bg">
+            <i class="ion-plus light"></i>
+          </span>
+
+          <span class="notifications-content">
+            &nbsp;&nbsp;<b>{{notification.userFullName}} </b> from <b>{{notification.userDescription}}</b> have registered. Please accept or decline the user. 
+          </span>
+          <p>
+            <button class="button" ng-click="accept(notification.userId)">Accept</button>
+            <button class="button"ng-click="decline(notification)">Decline</button>
+         <!-- <p class="post-time">
+            <i class="ion-ios-timer-outline"></i>
+            {{ notification.time }}
+          </p>-->
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

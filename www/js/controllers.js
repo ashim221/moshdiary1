@@ -4,6 +4,8 @@ angular.module('starter.controllers', [])
 // Put your login, register functions here
 .controller('AuthCtrl', function($scope, $ionicHistory, $ionicSideMenuDelegate, $q, UserService, $ionicLoading, AuthService, $state, $cookies, $rootScope, $location,$http) {
 	
+	
+
   $scope.login = function(user){
   	//alert('load');
     $ionicLoading.show({
@@ -14,6 +16,7 @@ angular.module('starter.controllers', [])
     .then(function(user){
       // success
 	 window.localStorage.setItem('count', 1);
+	$rootScope.me =  JSON.parse(window.localStorage.user);
       $state.go('home',{}, {reload:true});
 		
 	  
@@ -50,9 +53,18 @@ angular.module('starter.controllers', [])
     AuthService.doSignup(user)
     .then(function(user){
       // success
-		window.localStorage.setItem('count', 1);
-      $state.go('home');
+	
       $ionicLoading.hide();
+      setTimeout(function(){
+       $ionicLoading.show({
+      template: 'You have registered successfully. Once you are approved, you will be emailed.'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+	 $state.go('login');
+  },1500);
+      
     },function(err){
       // error
       $scope.errors = err;
@@ -64,18 +76,18 @@ angular.module('starter.controllers', [])
 // Home controller
 .controller('HomeCtrl', function($scope, $state, UserService, AuthService, $ionicActionSheet, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $rootScope) {
 	$scope.calendar = {};
-        
-	
-		$scope.getEvents =function()
+
+	$scope.chosen = new Date();
+
+	    $scope.getEvents =function()
 	{
-		$rootScope.me = {};
-		if (window.localStorage.user)
-		{
-			$rootScope.me =  JSON.parse(window.localStorage.user);
+		$rootScope.backbutton=false;
+			console.log(window.localStorage.user);
+		$rootScope.me =  JSON.parse(window.localStorage.user);
 			console.log($rootScope.me);
 		var token = $rootScope.me['0'].token;
 		console.log(token);
-	}
+		AuthService.getUser(token).then(function (response) {});
 			console.log("http://moshfitness.london/diary/getuserevent.php?token="+token);
 		$http.get("http://moshfitness.london/diary/getuserevent.php?token="+token)
     .then(function (response) {
@@ -93,8 +105,7 @@ angular.module('starter.controllers', [])
 
 		});
 	};
-	
-	$scope.chosen = new Date();
+
 	$scope.calendar.eventSource = $scope.getEvents();
 $scope.changeMode = function (mode) {
             $scope.calendar.mode = mode;
@@ -130,6 +141,10 @@ $scope.changeMode = function (mode) {
             console.log('Selected time: ' + selectedTime + ', hasEvents: ' + (events !== undefined && events.length !== 0) + ', disabled: ' + disabled);
 			$scope.chosen = selectedTime;
         };
+
+
+
+
 	$scope.addevent = function(selectedTime){
 		console.log(selectedTime);
 		if(!selectedTime)
@@ -175,9 +190,132 @@ $scope.changeMode = function (mode) {
 		 console.log(events);
             return events;
         }
+
+
+		
 	
 })
+.controller('NotificationCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, NotificationService, $state, $ionicPopup) {
 
+
+if ($rootScope.me['0'].userType==='admin')
+{
+	console.log($rootScope.me);
+NotificationService.getNotifications($rootScope.me['0'].token)
+    .then(function(data){
+				$scope.notifications = data.data;
+				console.log($scope.notifications.length);	
+					
+    },function(err){
+      // error
+	  //console.log(err);
+      //$scope.errors = err;
+      //$ionicLoading.hide();
+    });
+}
+$scope.accept= function (userId)
+{
+	NotificationService.acceptUser(userId, $rootScope.me['0'].token)
+    .then(function(data){
+				$scope.notifications = data.data;
+				setTimeout(function(){
+       $ionicLoading.show({
+      template: 'User is accepted'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },1500);	
+ NotificationService.getNotifications($rootScope.me['0'].token)
+    .then(function(data){
+				$scope.notifications = data.data;
+				console.log($scope.notifications.length);	
+					
+    });
+					
+    },function(err){
+      // error
+	  //console.log(err);
+      //$scope.errors = err;
+      //$ionicLoading.hide();
+    });
+}
+
+$scope.decline= function(user) {
+	
+      var confirmPopup = $ionicPopup.confirm({
+         title: 'Decline '+user.userFullName,
+         template: 'Are you sure?'
+      });
+
+      confirmPopup.then(function(res) {
+         if(res) {
+            
+           NotificationService.declineUser(user.userId, $rootScope.me['0'].token)
+    .then(function(data){
+				$scope.notifications = data.data;
+				setTimeout(function(){
+       $ionicLoading.show({
+      template: 'User is declined'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },1500);	
+ NotificationService.getNotifications($rootScope.me['0'].token)
+    .then(function(data){
+				$scope.notifications = data.data;
+				console.log($scope.notifications.length);	
+					
+    });
+					
+    },function(err){
+      // error
+	  //console.log(err);
+      //$scope.errors = err;
+      //$ionicLoading.hide();
+    }); 
+
+         } else {
+            console.log('Not sure!');
+         }
+      });
+		
+   };
+
+})
+
+.controller('AdminCtrl', function($scope, $rootScope, $http, $ionicLoading, AuthService, $state) {
+
+ $scope.adduser = function(user){
+    $ionicLoading.show({
+      template: 'Adding User ...'
+    });
+
+    AuthService.doAddUser(user, $rootScope.me['0'].token)
+    .then(function(user){
+      // success
+	
+      $ionicLoading.hide();
+      setTimeout(function(){
+       $ionicLoading.show({
+      template: 'You have registered successfully.'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+	 $state.go('home');
+  },1500);
+      
+    },function(err){
+      // error
+      $scope.errors = err;
+      $ionicLoading.hide();
+    });
+  };
+
+
+})
 
 .controller('AddEventCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state) {
 	console.log($stateParams.obj);
