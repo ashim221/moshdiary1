@@ -304,7 +304,7 @@ $scope.decline= function(user) {
   },100);
  setTimeout(function(){
 	 $ionicLoading.hide();
-	 $state.go('login');
+	 $state.go('home');
   },1500);
       
     },function(err){
