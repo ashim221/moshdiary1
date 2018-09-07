@@ -112,12 +112,16 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
     controller: 'UserCtrl'
   })
 
+
   // Notifications
+  // User profile
+
   .state('notifications', {
     url: '/notifications',
     templateUrl: 'templates/notifications.html',
     controller: 'NotificationCtrl'
   })
+
 
   // Notifications
   .state('adduser', {
@@ -125,6 +129,7 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
     templateUrl: 'templates/adduser.html',
     controller: 'AdminCtrl'
   })
+
     // if none of the above states are matched, use this as the fallback
 
     
