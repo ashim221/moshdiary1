@@ -85,6 +85,10 @@
               <i class="icon ion-ios-home-outline"></i>
               Home
             </div>
+            <div class="item item-icon-left" ui-sref="users" ng-if="user1.userType==='admin'" ng-repeat = "user1 in me">
+               <i class="icon ion-person"></i>
+             User
+            </div>
              <div class="item item-icon-left" ui-sref="notifications" ng-if="user1.userType==='admin'" ng-repeat = "user1 in me">
               <i class="icon ion-ios-bell-outline"></i>
               Notifications
@@ -92,7 +96,7 @@
             </div>
 
 			 <div class="item item-icon-left" ui-sref="adduser" ng-if="user1.userType==='admin'" ng-repeat = "user1 in me">
-               <i class="icon ion-plus"></i>
+               <i class="icon ion-person-add"></i>
              Add New User
             </div>
 
