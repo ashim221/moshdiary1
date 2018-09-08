@@ -31,6 +31,11 @@
       <ion-item ng-show="!data.all">
         <label>End Time:(24 hours format)<input type="time" ng-model="data.endtime"></label>
       </ion-item>
+      <ion-item>
+    <label>Description:<textarea ng-model="data.eventdescription" class="textarea"></textarea> 
+    
+    </label>
+  </ion-item>
        <ion-item>
          <button class="button button-block button-positive" ng-click="addtask(data)" ng-disabled="addevent.$invalid">
         Add a New Task

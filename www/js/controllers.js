@@ -76,7 +76,7 @@ angular.module('starter.controllers', [])
 // Home controller
 .controller('HomeCtrl', function($scope, $state, UserService, AuthService, $ionicActionSheet, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $rootScope) {
 	$scope.calendar = {};
-
+	$scope.display ="month";
 	$scope.chosen = new Date();
 
 	    $scope.getEvents =function()
@@ -109,6 +109,7 @@ angular.module('starter.controllers', [])
 	$scope.calendar.eventSource = $scope.getEvents();
 $scope.changeMode = function (mode) {
             $scope.calendar.mode = mode;
+	console.log(mode);
         };
 	$scope.loadEvents = function () {
             $scope.calendar.eventSource = createRandomEvents();

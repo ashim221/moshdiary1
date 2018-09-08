@@ -353,6 +353,7 @@ this.addEventUser = function(data){
 	  "starttime":q.startTime,
 	  "endtime":q.endTime,
 	  "eventname":q.eventname,
+	  "eventdescription":q.eventdescription
 	  "allDay":q.all
 	  
   }),
