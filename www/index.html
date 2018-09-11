@@ -72,7 +72,7 @@
           <!-- User profile -->
           <div class="text-center" ng-repeat = "user1 in me">
             <a href="#/user/{{user1.userId}}">
-            <!--  <img class="profile-picture" menu-close="" src="{{user1.userPic}}"> -->
+             <!--<img menu-close="" src="{{user1.userPic}}"> -->    
               <h4>{{user1.userFullName}}</h4>
             </a>
           </div>
@@ -87,7 +87,7 @@
             </div>
             <div class="item item-icon-left" ui-sref="users" ng-if="user1.userType==='admin'" ng-repeat = "user1 in me">
                <i class="icon ion-person"></i>
-             User
+             Users
             </div>
              <div class="item item-icon-left" ui-sref="notifications" ng-if="user1.userType==='admin'" ng-repeat = "user1 in me">
               <i class="icon ion-ios-bell-outline"></i>

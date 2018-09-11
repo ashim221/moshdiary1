@@ -16,6 +16,18 @@
 	position: fixed;
 	z-index: -10;
 }
+.thumbnails
+{
+  border-radius: 50%;
+  width: 100%;
+  max-width: 50px;
+}
+.thumbnails1
+{
+  border-radius: 50%;
+  width: 100%;
+  max-width: 30px;
+}
 .textarea
 {
   width: 100%;

@@ -1,0 +1,34 @@
+<!--
+  This template loads for the 'notifications' state (app.js)
+  'notifications' is a $scope variable created in the 'NotificationsCtrl' controller (controllers.js)
+  The NotificationsCtrl pulls data from the Notifications service (service.js)
+  The Notifications service returns an array of notifications data
+-->
+<ion-view view-title="Users">
+  <ion-content>
+    <div class="list notifications-list">
+      <div class="item no-border" ng-repeat="user in users">
+        <div class="item-body">
+
+          
+          <span class="item-label balanced-bg">
+            <i class="ion-plus light"></i>
+          </span>
+
+          <span class="notifications-content">
+            &nbsp;&nbsp;<img src="user.userPic" class="profile-picture"><b>{{user.userFullName}} </b> from <b>{{user.userDescription}}</b>
+          </span>
+           <button class="button" ng-click="seecalendar(user.userId)">See Calendar</button>
+           <button class="button"ng-click="delete(user)">Delete</button>
+          <p>
+           
+            
+         <!-- <p class="post-time">
+            <i class="ion-ios-timer-outline"></i>
+            {{ notification.time }}
+          </p>-->
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

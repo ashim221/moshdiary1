@@ -74,7 +74,7 @@ angular.module('starter.controllers', [])
   
 })
 // Home controller
-.controller('HomeCtrl', function($scope, $state, UserService, AuthService, $ionicActionSheet, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $rootScope) {
+.controller('HomeCtrl', function($scope, $state, UserService, AuthService, $ionicActionSheet,$filter, $ionicPopup, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $rootScope) {
 	$scope.calendar = {};
 	$scope.display ="month";
 	$scope.chosen = new Date();
@@ -94,11 +94,11 @@ angular.module('starter.controllers', [])
 			$scope.event = response.data.event;
 			for (var ki=0;ki<$scope.event.length;ki++)
 				{
-					console.log($scope.event[ki]);
+					//console.log($scope.event[ki]);
 					$scope.d = new Date($scope.event[ki].startTime);
-			$scope.event[ki].startTime = new Date($scope.d.getTime() - ($scope.d.getTimezoneOffset() * 60000));
+			$scope.event[ki].startTime = new Date($scope.d.getTime());
 					$scope.e = new Date($scope.event[ki].endTime);
-			$scope.event[ki].endTime = new Date($scope.e.getTime() - ($scope.e.getTimezoneOffset() * 60000));
+			$scope.event[ki].endTime = new Date($scope.e.getTime());
 				}
 			$scope.calendar.eventSource = $scope.event; 
 			console.log($scope.calendar.eventSource);
@@ -117,12 +117,41 @@ $scope.changeMode = function (mode) {
 
         $scope.onEventSelected = function (event) {
 			console.log(event);
-            console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
+			var start = $filter('date')(event.startTime, "hh:mm a");
+	var end = $filter('date')(event.endTime, "hh:mm a");
+	var date1 = $filter('date')(event.startTime, "dd MMMM yyyy");
+	console.log(event.startTime);
+	console.log(date1);
+	if (!event.allDay)
+	{
+	var temp = 'Date:'+date1+ '<br>'+'Time:'+ start   + '-' + end   + '<br> ' +event.description;
+	}
+	else
+	{
+		var temp = 'Date:'+date1+ '<br>'+'Time: All Day'+ '<br> ' +event.description;
+	}
+var confirmPopup = $ionicPopup.confirm({
+	
+         title: event.title,
+         template: temp,
+         cancelText: 'Edit'
+      });
+confirmPopup.then(function(res) {
+         if(res) {
+            
+           
+
+         } else {
+            $state.go('editevent', {obj:event});
+         }
+      });
+
+         
         };
 
         $scope.onViewTitleChanged = function (title) {
             $scope.viewTitle = title;
-			console.log(title);
+			//console.log(title);
         };
 
         $scope.today = function () {
@@ -306,7 +335,7 @@ $scope.decline= function(user) {
  setTimeout(function(){
 	 $ionicLoading.hide();
 	 $state.go('home');
-  },1500);
+  },2000);
       
     },function(err){
       // error
@@ -314,24 +343,161 @@ $scope.decline= function(user) {
       $ionicLoading.hide();
     });
   };
+  $rootScope.me =  JSON.parse(window.localStorage.user);
+			console.log($rootScope.me);
+		var token = $rootScope.me['0'].token;
+  console.log("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token);
+  $http.get("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token)
+    .then(function (response) {
+			$scope.users = response.data.data;
+			console.log($scope.users);
+			
+
+		});
+  
+$scope.seecalendar = function(user)
+{
+	$state.go('usercalendar', {obj:user});
+}
+
+
+
 
 
 })
 
-.controller('AddEventCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state) {
-	console.log($stateParams.obj);
-	console.log($rootScope.me);
-	$scope.data=[];
-	$scope.data.token = $rootScope.me['0'].token;
-	$scope.data.userId = $rootScope.me['0'].userId;
-	console.log($scope.tok);
-	console.log($scope.userID);
-	$scope.error = false;
-	$scope.event = '';
-	$scope.data.chosendate = new Date($stateParams.obj);
+.controller('UserCalendarCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state, $filter) {
+console.log($stateParams.obj);
+$scope.userId = $stateParams.obj.userId;
+$scope.userName = $stateParams.obj.userFullName;
+$scope.userPic = $stateParams.obj.userPic;
+$scope.calendar = {};
+$scope.event = '';
+$scope.user = $stateParams.obj;
+
+	$scope.display ="month";
+	$scope.chosen = new Date();
+$scope.getEvents =function()
+	{
+		var token = $rootScope.me['0'].token;
+		console.log(token);
+			console.log("http://moshfitness.london/diary/getadminuserevents.php?token="+token+"&userId="+$scope.userId);
+		$http.get("http://moshfitness.london/diary/getadminuserevents.php?token="+token+"&userId="+$scope.userId)
+    .then(function (response) {
+			$scope.event = response.data.event;
+			for (var ki=0;ki<$scope.event.length;ki++)
+				{
+					//console.log($scope.event[ki]);
+					$scope.d = new Date($scope.event[ki].startTime);
+			$scope.event[ki].startTime = new Date($scope.d.getTime());
+					$scope.e = new Date($scope.event[ki].endTime);
+			$scope.event[ki].endTime = new Date($scope.e.getTime());
+				}
+			$scope.calendar.eventSource = $scope.event; 
+			console.log($scope.calendar.eventSource);
+
+		});
+	};
+	$scope.calendar.eventSource = $scope.getEvents();
+$scope.changeMode = function (mode) {
+            $scope.calendar.mode = mode;
+	console.log(mode);
+        };
+	$scope.loadEvents = function () {
+            $scope.calendar.eventSource = createRandomEvents();
+        };
+
+        $scope.onEventSelected = function (event) {
+			console.log(event);
+			var start = $filter('date')(event.startTime, "hh:mm a");
+	var end = $filter('date')(event.endTime, "hh:mm a");
+	var date1 = $filter('date')(event.startTime, "dd MMMM yyyy");
+	console.log(event.startTime);
+	console.log(date1);
+	if (!event.allDay)
+	{
+	var temp = 'Date:'+date1+ '<br>'+'Time:'+ start   + '-' + end   + '<br> ' +event.description;
+	}
+	else
+	{
+		var temp = 'Date:'+date1+ '<br>'+'Time: All Day'+ '<br> ' +event.description;
+	}
+var confirmPopup = $ionicPopup.confirm({
 	
+         title: event.title,
+         template: temp,
+         cancelText: 'Edit'
+      });
+confirmPopup.then(function(res) {
+         if(res) {
+            
+           
+
+         } else {
+            $state.go('editevent', {obj:event});
+         }
+      });
+
+         
+        };
+
+        $scope.onViewTitleChanged = function (title) {
+            $scope.viewTitle = title;
+			//console.log(title);
+        };
+
+        $scope.today = function () {
+            $scope.calendar.currentDate = new Date();
+        };
+
+        $scope.isToday = function () {
+            var today = new Date(),
+                currentCalendarDate = new Date($scope.calendar.currentDate);
+
+            today.setHours(0, 0, 0, 0);
+            currentCalendarDate.setHours(0, 0, 0, 0);
+            return today.getTime() === currentCalendarDate.getTime();
+        };
+
+        $scope.onTimeSelected = function (selectedTime, events, disabled) {
+            console.log('Selected time: ' + selectedTime + ', hasEvents: ' + (events !== undefined && events.length !== 0) + ', disabled: ' + disabled);
+			$scope.chosen = selectedTime;
+        };
+
+
+
+$scope.addevent = function(selectedTime, user){
+		console.log(selectedTime);
+		if(!selectedTime)
+			{
+				selectedTime = new Date($scope.calendar.currentDate);
+			}
+		$state.go('addeventadmin', {obj2:selectedTime, obj1:user});
+	};
+
+
+
+	})
+
+.controller('AddAdminEventCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state, $filter) {
+console.log($stateParams.obj2);
+console.log($stateParams.obj1);
+$scope.data=[];
+ $scope.data.chosendate = new Date($stateParams.obj2);
+
+$scope.user1 = $stateParams.obj1;
+
+
+
+$scope.difference = new Date().getTimezoneOffset();
+	
+	$scope.difference = $scope.difference/60;
+	console.log($scope.difference);
 	$scope.addtask= function(data)
 	{
+		$scope.data.userId = $scope.userId;
+		$scope.data.token = $rootScope.me['0'].token;
+		$scope.error = false;
 		console.log(data);
 		if ($scope.data.chosendate.getMonth()<10)
 					{
@@ -352,46 +518,48 @@ $scope.decline= function(user) {
 					}
 		if (!data.all)
 			{
-				
-				
-				if ($scope.data.starttime.getHours()<10)
+				console.log($scope.data);
+				$scope.hourss = $scope.data.starttime.getUTCHours()+$scope.difference;
+				console.log($scope.hourss);
+				if ($scope.hourss<10)
 					{
-						$scope.starthour = '0'+ $scope.data.starttime.getHours();
+						$scope.starthour = '0'+ $scope.hourss;
 					}
 				else
 					{
-						$scope.starthour = $scope.data.starttime.getHours();
+						$scope.starthour = $scope.hourss;
 					}
-				if ($scope.data.starttime.getMinutes()<10)
+				if ($scope.data.starttime.getUTCMinutes()<10)
 					{
-						$scope.startmin = '0'+$scope.data.starttime.getMinutes();
-					}
-				else
-					
-					{
-						$scope.startmin = $scope.data.starttime.getMinutes();
-					}
-				
-				if ($scope.data.endtime.getHours()<10)
-					{
-						$scope.endhour = '0'+ $scope.data.endtime.getHours();
-					}
-				else
-					{
-						$scope.endhour = $scope.data.endtime.getHours();
-					}
-				if ($scope.data.endtime.getMinutes()<10)
-					{
-						$scope.endmin = '0'+$scope.data.endtime.getMinutes();
+						$scope.startmin = '0'+$scope.data.starttime.getUTCMinutes();
 					}
 				else
 					
 					{
-						$scope.endmin = $scope.data.endtime.getMinutes();
+						$scope.startmin = $scope.data.starttime.getUTCMinutes();
+					}
+					$scope.endhourss = $scope.data.endtime.getUTCHours()+$scope.difference;
+				
+				if ($scope.endhourss<10)
+					{
+						$scope.endhour = '0'+ $scope.endhourss;
+					}
+				else
+					{
+						$scope.endhour = $scope.endhourss;
+					}
+				if ($scope.data.endtime.getUTCMinutes()<10)
+					{
+						$scope.endmin = '0'+$scope.data.endtime.getUTCMinutes();
+					}
+				else
+					
+					{
+						$scope.endmin = $scope.data.endtime.getUTCMinutes();
 					}
 					
-				$scope.startDate1 = $scope.data.chosendate.getFullYear()+'-'+($scope.month)+'-'+$scope.date;
-				console.log($scope.startDate1);
+				$scope.startDate1 = $scope.data.chosendate.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
+				console.log($scope.starthour);
 				$scope.startTime1 =   $scope.starthour+":"+$scope.startmin;
 				$scope.endTime1 =   $scope.endhour+":"+$scope.endmin;
 				$scope.startTime = $scope.startDate1+'T'+$scope.startTime1;
@@ -404,7 +572,7 @@ $scope.decline= function(user) {
 			}
 		else
 			{
-				$scope.startDate1 = $scope.data.chosendate.getFullYear()+'-'+($scope.month)+'-'+$scope.date;
+				$scope.startDate1 = $scope.data.chosendate.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
 				$scope.startTime1 =   "01:00:00";
 				$scope.dat = new Date($scope.startDate1+'T'+$scope.startTime1);
 				var nextDay = new Date($scope.dat);
@@ -442,6 +610,304 @@ $scope.decline= function(user) {
 			}
 		if ($scope.error===false)
 			{
+				console.log(data);
+				 AuthService.addAdminEventUser($scope.data)
+    .then(function(data){
+					
+					
+    },function(err){
+      // error
+	  //console.log(err);
+      //$scope.errors = err;
+      //$ionicLoading.hide();
+    });
+  }
+			};
+
+})
+
+
+
+
+.controller('EditEventCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state, $filter) {
+	console.log($stateParams.obj);
+	$scope.data = [];
+	//$scope.eventdetail = $stateParams.obj;
+	$scope.data.eventname = $stateParams.obj.title;
+	$scope.data.chosendate1 = new Date($stateParams.obj.startTime);
+	$scope.data.starttime = new Date($stateParams.obj.startTime);
+	$scope.data.endtime = new Date($stateParams.obj.endTime);
+	$scope.data.all = $stateParams.obj.allDay;
+	$scope.data.eventdescription = $stateParams.obj.description;
+	$scope.data.eventId = $stateParams.obj.eventId;
+	
+	$scope.data.token = $rootScope.me['0'].token;
+
+$scope.edittask= function(data)
+	{
+		console.log(data);
+		$scope.error = false;
+		if ($scope.data.chosendate1.getMonth()<10)
+					{
+						$scope.month = '0'+ ($scope.data.chosendate1.getMonth()+1);
+					}
+				else
+					{
+						$scope.month = ($scope.data.chosendate1.getMonth()+1);
+					}
+				if ($scope.data.chosendate1.getDate()<10)
+					{
+						$scope.date = '0'+$scope.data.chosendate1.getDate();
+					}
+				else
+					
+					{
+						$scope.date = $scope.data.chosendate1.getDate();
+					}
+		if (!data.all)
+			{
+				
+				console.log('12');
+				if ($scope.data.starttime.getUTCHours()<10)
+					{
+						$scope.starthour = '0'+ $scope.data.starttime.getUTCHours();
+					}
+				else
+					{
+						$scope.starthour = $scope.data.starttime.getUTCHours();
+					}
+				if ($scope.data.starttime.getUTCMinutes()<10)
+					{
+						$scope.startmin = '0'+$scope.data.starttime.getUTCMinutes();
+					}
+				else
+					
+					{
+						$scope.startmin = $scope.data.starttime.getUTCMinutes();
+					}
+				
+				if ($scope.data.endtime.getUTCHours()<10)
+					{
+						$scope.endhour = '0'+ $scope.data.endtime.getUTCHours();
+					}
+				else
+					{
+						$scope.endhour = $scope.data.endtime.getUTCHours();
+					}
+				if ($scope.data.endtime.getUTCMinutes()<10)
+					{
+						$scope.endmin = '0'+$scope.data.endtime.getUTCMinutes();
+					}
+				else
+					
+					{
+						$scope.endmin = $scope.data.endtime.getUTCMinutes();
+					}
+					
+				$scope.startDate1 = $scope.data.chosendate1.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
+				console.log($scope.startDate1);
+				$scope.startTime1 =   $scope.starthour+":"+$scope.startmin;
+				$scope.endTime1 =   $scope.endhour+":"+$scope.endmin;
+				$scope.startTime = $scope.startDate1+'T'+$scope.startTime1;
+				console.log($scope.startTime);
+		        $scope.endTime = $scope.startDate1+'T'+$scope.endTime1;
+				console.log($scope.endTime);
+				$scope.data.endTime = new Date($scope.endTime);
+				$scope.data.startTime = new Date($scope.startTime);
+			
+			}
+		else
+			{
+				$scope.startDate1 = $scope.data.chosendate1.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
+				$scope.startTime1 =   "01:00:00";
+				$scope.dat = new Date($scope.startDate1+'T'+$scope.startTime1);
+				var nextDay = new Date($scope.dat);
+				nextDay.setDate($scope.dat.getDate()+1);
+				console.log(nextDay);
+				$scope.endDate = nextDay;
+				$scope.data.endTime = new Date($scope.endDate);
+				$scope.data.startTime = new Date($scope.dat);
+			}
+		if ($scope.data.chosendate1< new Date())
+			{
+				$scope.error = true;
+				setTimeout(function(){
+       $ionicLoading.show({
+      template: 'Date cannot be in past'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },1500);
+				console.log();
+			}
+		if ($scope.data.startTime> $scope.data.endTime)
+			{
+				$scope.error = true;
+				setTimeout(function(){
+       $ionicLoading.show({
+      template: 'Time allocation is not correct'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },1500);
+			
+			}
+		if ($scope.error===false)
+			{
+				console.log($scope.data);
+
+				 AuthService.editEventUser($scope.data)
+    .then(function(data){
+					
+					
+    },function(err){
+      // error
+	  //console.log(err);
+      //$scope.errors = err;
+      //$ionicLoading.hide();
+    });
+  }
+			};
+
+
+
+
+	})
+
+.controller('AddEventCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state) {
+	console.log($stateParams.obj);
+	console.log($rootScope.me);
+	$scope.data=[];
+	$scope.data.token = $rootScope.me['0'].token;
+	$scope.data.userId = $rootScope.me['0'].userId;
+	console.log($scope.tok);
+	console.log($scope.userID);
+	
+	$scope.event = '';
+	$scope.data.chosendate = new Date($stateParams.obj);
+	
+	$scope.difference = new Date().getTimezoneOffset();
+	
+	$scope.difference = $scope.difference/60;
+	console.log($scope.difference);
+	$scope.addtask= function(data)
+	{
+		$scope.error = false;
+		console.log(data);
+		if ($scope.data.chosendate.getMonth()<10)
+					{
+						$scope.month = '0'+ ($scope.data.chosendate.getMonth()+1);
+					}
+				else
+					{
+						$scope.month = ($scope.data.chosendate.getMonth()+1);
+					}
+				if ($scope.data.chosendate.getDate()<10)
+					{
+						$scope.date = '0'+$scope.data.chosendate.getDate();
+					}
+				else
+					
+					{
+						$scope.date = $scope.data.chosendate.getDate();
+					}
+		if (!data.all)
+			{
+				console.log($scope.data);
+				$scope.hourss = $scope.data.starttime.getUTCHours()+$scope.difference;
+				console.log($scope.hourss);
+				if ($scope.hourss<10)
+					{
+						$scope.starthour = '0'+ $scope.hourss;
+					}
+				else
+					{
+						$scope.starthour = $scope.hourss;
+					}
+				if ($scope.data.starttime.getUTCMinutes()<10)
+					{
+						$scope.startmin = '0'+$scope.data.starttime.getUTCMinutes();
+					}
+				else
+					
+					{
+						$scope.startmin = $scope.data.starttime.getUTCMinutes();
+					}
+					$scope.endhourss = $scope.data.endtime.getUTCHours()+$scope.difference;
+				
+				if ($scope.endhourss<10)
+					{
+						$scope.endhour = '0'+ $scope.endhourss;
+					}
+				else
+					{
+						$scope.endhour = $scope.endhourss;
+					}
+				if ($scope.data.endtime.getUTCMinutes()<10)
+					{
+						$scope.endmin = '0'+$scope.data.endtime.getUTCMinutes();
+					}
+				else
+					
+					{
+						$scope.endmin = $scope.data.endtime.getUTCMinutes();
+					}
+					
+				$scope.startDate1 = $scope.data.chosendate.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
+				console.log($scope.starthour);
+				$scope.startTime1 =   $scope.starthour+":"+$scope.startmin;
+				$scope.endTime1 =   $scope.endhour+":"+$scope.endmin;
+				$scope.startTime = $scope.startDate1+'T'+$scope.startTime1;
+				console.log($scope.startTime);
+		        $scope.endTime = $scope.startDate1+'T'+$scope.endTime1;
+				console.log($scope.endTime);
+				$scope.data.endTime = new Date($scope.endTime);
+				$scope.data.startTime = new Date($scope.startTime);
+			
+			}
+		else
+			{
+				$scope.startDate1 = $scope.data.chosendate.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
+				$scope.startTime1 =   "01:00:00";
+				$scope.dat = new Date($scope.startDate1+'T'+$scope.startTime1);
+				var nextDay = new Date($scope.dat);
+				nextDay.setDate($scope.dat.getDate()+1);
+				console.log(nextDay);
+				$scope.endDate = nextDay;
+				$scope.data.endTime = new Date($scope.endDate);
+				$scope.data.startTime = new Date($scope.dat);
+			}
+		if ($scope.data.chosendate< new Date())
+			{
+				$scope.error = true;
+				setTimeout(function(){
+       $ionicLoading.show({
+      template: 'Date cannot be in past'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },1500);
+				console.log();
+			}
+		if ($scope.data.startTime> $scope.data.endTime)
+			{
+				$scope.error = true;
+				setTimeout(function(){
+       $ionicLoading.show({
+      template: 'Time allocation is not correct'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },1500);
+			
+			}
+		if ($scope.error===false)
+			{
+				console.log(data);
 				 AuthService.addEventUser(data)
     .then(function(data){
 					

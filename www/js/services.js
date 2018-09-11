@@ -366,6 +366,114 @@ this.addEventUser = function(data){
        $ionicLoading.show({
       template: 'Task Added successfully'
     });
+  },1000);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },5000);
+		$state.go('home',{}, {reload:true});
+      // success
+	// window.localStorage.setItem('count', 1);
+    
+      
+	}
+	else
+	{
+		console.log(response);
+		var errors_list = [],
+            error = {
+              code: response.errors['0'].code,
+              msg: response.errors['0'].message
+            };
+        errors_list.push(error);
+        deferred.reject(errors_list);
+	}
+});
+    return deferred.promise;
+  };
+
+
+this.addAdminEventUser = function(data){
+	console.log(data);
+	var q = data;
+    var deferred = $q.defer();
+	$http({
+  method: 'POST',
+  url: 'http://moshfitness.london/diary/addadmineventsuser.php',
+  data: $httpParamSerializerJQLike({
+      "token":q.token,
+      "chosendate":q.chosendate,
+	  "starttime":q.startTime,
+	  "endtime":q.endTime,
+	  "eventname":q.eventname,
+	  "eventdescription":q.eventdescription,
+	  "allDay":q.all,
+	  "userId":q.userId
+	  
+  }),
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+}).success(function (response) {
+		console.log(response);
+	if (!response.errors)
+	{
+		setTimeout(function(){
+       $ionicLoading.show({
+      template: 'Task Added successfully'
+    });
+  },1000);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },5000);
+		$state.go('home',{}, {reload:true});
+      // success
+	// window.localStorage.setItem('count', 1);
+    
+      
+	}
+	else
+	{
+		console.log(response);
+		var errors_list = [],
+            error = {
+              code: response.errors['0'].code,
+              msg: response.errors['0'].message
+            };
+        errors_list.push(error);
+        deferred.reject(errors_list);
+	}
+});
+    return deferred.promise;
+  };
+
+
+
+
+this.editEventUser = function(data){
+	console.log(data);
+	var q = data;
+    var deferred = $q.defer();
+	$http({
+  method: 'POST',
+  url: 'http://moshfitness.london/diary/editeventsuser.php',
+  data: $httpParamSerializerJQLike({
+      "token":q.token,
+      "chosendate":q.chosendate,
+	  "starttime":q.startTime,
+	  "endtime":q.endTime,
+	  "eventname":q.eventname,
+	  "eventdescription":q.eventdescription,
+	  "eventId":q.eventId,
+	  "allDay":q.all
+	  
+  }),
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+}).success(function (response) {
+		console.log(response);
+	if (!response.errors)
+	{
+		setTimeout(function(){
+       $ionicLoading.show({
+      template: 'Task Edited successfully'
+    });
   },100);
  setTimeout(function(){
 	 $ionicLoading.hide();
@@ -390,6 +498,9 @@ this.addEventUser = function(data){
 });
     return deferred.promise;
   };
+
+
+
 	
 
 this.getEvents = function(token){

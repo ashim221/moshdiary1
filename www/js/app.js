@@ -104,7 +104,35 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
     }
   })
 
+.state('addeventadmin', {
+    url: '/neweventadmin',
+    templateUrl: 'templates/addeventadmin.html',
+    controller: 'AddAdminEventCtrl',
+    params: {
+        obj2: null,
+        obj1:null
+    }
+  })
+
+
+.state('editevent', {
+    url: '/editevent',
+    templateUrl: 'templates/editevent.html',
+    controller: 'EditEventCtrl',
+    params: {
+        obj: null
+    }
+  })
   
+.state('usercalendar', {
+    url: '/usercalendar',
+    templateUrl: 'templates/usercalendar.html',
+    controller: 'UserCalendarCtrl',
+    params: {
+        obj: null
+    }
+  })
+
   // User profile
   .state('user', {
     url: '/user/:userId',
@@ -120,6 +148,12 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
     url: '/notifications',
     templateUrl: 'templates/notifications.html',
     controller: 'NotificationCtrl'
+  })
+
+  .state('users', {
+    url: '/users',
+    templateUrl: 'templates/users.html',
+    controller: 'AdminCtrl'
   })
 
 
