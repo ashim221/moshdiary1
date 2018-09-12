@@ -71,8 +71,8 @@
 
           <!-- User profile -->
           <div class="text-center" ng-repeat = "user1 in me">
-            <a href="#/user/{{user1.userId}}">
-             <!--<img menu-close="" src="{{user1.userPic}}"> -->    
+            <a ng-href="#/user/{{user1.userId}}">
+             <img menu-close="" src="{{user1.userPic}}" class="profilepic">   
               <h4>{{user1.userFullName}}</h4>
             </a>
           </div>

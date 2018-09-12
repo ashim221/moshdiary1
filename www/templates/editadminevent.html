@@ -2,14 +2,14 @@
   This template loads for the 'home' state (app.js)
   'posts' is a $scope variable come from Home controller
 -->
-<ion-view view-title="Add a New Task-for {{user1.userFullName}}">
-<ion-nav-bar class="bar-balanced">
+<ion-view view-title="Edit Task">
+  <ion-nav-bar class="bar-balanced">
      <ion-nav-buttons side="left">
             <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
             </button>
   </ion-nav-bar>
   <ion-content>
-  <form name="addevent">
+  <form name="editevent">
   <ion-list>
   <ion-item>
   	<label>Name:<input type="text" ng-model="data.eventname" required>
@@ -18,7 +18,7 @@
   </ion-item>
   
   <ion-item item-input>
-  	<label>Date:<input type="date" ng-model="data.chosendate" required></label>
+  	<label>Date:<input type="date" ng-model="data.chosendate1" required></label>
   </ion-item>
 
  <ion-item class="item-toggle">
@@ -42,8 +42,8 @@
     </label>
   </ion-item>
        <ion-item>
-         <button class="button button-block button-positive" ng-click="addtask(data)" ng-disabled="addevent.$invalid">
-        Add a New Task
+         <button class="button button-block button-positive" ng-click="edittask(data)" ng-disabled="addevent.$invalid">
+        Update this task
       </button>
       </ion-item> 
       

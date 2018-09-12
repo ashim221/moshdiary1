@@ -1,4 +1,5 @@
 
++
 <!--
   This template loads for the 'user' state (app.js)
   'user' is a $scope variable created in UserCtrl controller (controllers.js)
@@ -7,30 +8,30 @@
 -->
 <ion-view view-title="Profile" cache-view="false">
   <ion-content>
-    <div class="text-center user-profile positive-bg" ng-repeat="x in userCeleb">
+    <div class="text-center user-profile" ng-repeat="x in userCeleb">
 
-     <!-- <img class="profile-picture" menu-close="" src="{{x.userPic}}"><a ng-click="" ng-if="myProfile"><i class="icon ion-edit"></i></a>-->
+      <img class="profilepic" menu-close="" src="{{x.userPic}}"><button ng-click="changepic()" ng-if="myProfile"><i class="icon ion-edit"></i>Edit</button>
       
 
-      <h4 class="light"><span ng-if="editName===false">{{ x.userFullName }} 
+      <h4 class="dark"><span ng-if="editName===false">{{ x.userFullName }} 
       </span> 
-   <span ng-if="editName===true" class="light">
+   <span ng-if="editName===true" class="dark">
    
    <label class="item item-input"><input type="text" placeholder="{{x.userFullName}}" ng-model="data.fullname">
     </label>
-    <a ng-click="update(data)" ng-if="myProfile"><i class="icon  ion-checkmark"></i></a>
-    <a ng-click="cancel()" ng-if="myProfile"><i class="icon  ion-close"></i></a>
+    <button ng-click="update(data)" ng-if="myProfile"><i class="icon  ion-checkmark"></i> Edit</button>
+    <button ng-click="cancel()" ng-if="myProfile"><i class="icon  ion-close"></i> Close</button>
     </span> 
      &nbsp;&nbsp;<a ng-click="editNamer();" ng-if="myProfile" ng-hide="editName===true"><i class="icon ion-edit"></i></a>
       
       </h4>
-		<p class="light"><span ng-if="editDesc===false">{{ x.userDescription}}</span> 
-   <span ng-if="editDesc===true" class="light">
+		<p class="dark"><span ng-if="editDesc===false">{{ x.userDescription}}</span> 
+   <span ng-if="editDesc===true" class="dark">
    
    <label class="item item-input"><input type="text" placeholder="{{x.userDescription}}" ng-model="data.description">
     </label>
-    <a ng-click="update(data)" ng-if="myProfile"><i class="icon  ion-checkmark"></i></a>
-    <a ng-click="cancel()" ng-if="myProfile"><i class="icon  ion-close"></i></a>
+    <button ng-click="update(data)" ng-if="myProfile"><i class="icon  ion-checkmark"></i>Edit</button>
+    <button ng-click="cancel()" ng-if="myProfile"><i class="icon  ion-close"></i>Close</button>
     </span> 
      &nbsp;&nbsp;<a ng-click="editDescription();" ng-if="myProfile" ng-hide="editDesc===true"><i class="icon ion-edit"></i></a></p>
     

@@ -255,7 +255,7 @@ $scope.accept= function (userId)
   },100);
  setTimeout(function(){
 	 $ionicLoading.hide();
-  },1500);	
+  },3000);	
  NotificationService.getNotifications($rootScope.me['0'].token)
     .then(function(data){
 				$scope.notifications = data.data;
@@ -366,7 +366,7 @@ $scope.seecalendar = function(user)
 
 })
 
-.controller('UserCalendarCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state, $filter) {
+.controller('UserCalendarCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state, $filter, $ionicPopup) {
 console.log($stateParams.obj);
 $scope.userId = $stateParams.obj.userId;
 $scope.userName = $stateParams.obj.userFullName;
@@ -387,7 +387,7 @@ $scope.getEvents =function()
 			$scope.event = response.data.event;
 			for (var ki=0;ki<$scope.event.length;ki++)
 				{
-					//console.log($scope.event[ki]);
+					console.log($scope.event[ki]);
 					$scope.d = new Date($scope.event[ki].startTime);
 			$scope.event[ki].startTime = new Date($scope.d.getTime());
 					$scope.e = new Date($scope.event[ki].endTime);
@@ -412,6 +412,8 @@ $scope.changeMode = function (mode) {
 			var start = $filter('date')(event.startTime, "hh:mm a");
 	var end = $filter('date')(event.endTime, "hh:mm a");
 	var date1 = $filter('date')(event.startTime, "dd MMMM yyyy");
+	event.other=true;
+	event.user = $scope.user;
 	console.log(event.startTime);
 	console.log(date1);
 	if (!event.allDay)
@@ -434,7 +436,7 @@ confirmPopup.then(function(res) {
            
 
          } else {
-            $state.go('editevent', {obj:event});
+            $state.go('editadminevent', {obj:event});
          }
       });
 
@@ -485,7 +487,7 @@ console.log($stateParams.obj1);
 $scope.data=[];
  $scope.data.chosendate = new Date($stateParams.obj2);
 
-$scope.user1 = $stateParams.obj1;
+$scope.data.user1 = $stateParams.obj1;
 
 
 
@@ -495,7 +497,7 @@ $scope.difference = new Date().getTimezoneOffset();
 	console.log($scope.difference);
 	$scope.addtask= function(data)
 	{
-		$scope.data.userId = $scope.userId;
+		$scope.data.userId = $stateParams.obj1.userId;
 		$scope.data.token = $rootScope.me['0'].token;
 		$scope.error = false;
 		console.log(data);
@@ -573,13 +575,12 @@ $scope.difference = new Date().getTimezoneOffset();
 		else
 			{
 				$scope.startDate1 = $scope.data.chosendate.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
-				$scope.startTime1 =   "01:00:00";
+				$scope.startTime1 =   "11:00:00";
+				$scope.endTime1 =   "22:00:00";
 				$scope.dat = new Date($scope.startDate1+'T'+$scope.startTime1);
-				var nextDay = new Date($scope.dat);
-				nextDay.setDate($scope.dat.getDate()+1);
-				console.log(nextDay);
-				$scope.endDate = nextDay;
-				$scope.data.endTime = new Date($scope.endDate);
+				$scope.dat1 = new Date($scope.startDate1+'T'+$scope.endTime1);
+
+				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
 			}
 		if ($scope.data.chosendate< new Date())
@@ -640,9 +641,20 @@ $scope.difference = new Date().getTimezoneOffset();
 	$scope.data.all = $stateParams.obj.allDay;
 	$scope.data.eventdescription = $stateParams.obj.description;
 	$scope.data.eventId = $stateParams.obj.eventId;
-	
+	$scope.data.user = $stateParams.obj.user;
+	$scope.data.other = $stateParams.obj.other;
 	$scope.data.token = $rootScope.me['0'].token;
+$scope.barcolour = function()
+{
+	if($scope.data.other)
+	{
+		return 'bar-balanced';
+	}
+	else
+	{
 
+	}
+}
 $scope.edittask= function(data)
 	{
 		console.log(data);
@@ -719,13 +731,12 @@ $scope.edittask= function(data)
 		else
 			{
 				$scope.startDate1 = $scope.data.chosendate1.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
-				$scope.startTime1 =   "01:00:00";
+				$scope.startTime1 =   "11:00:00";
+				$scope.endTime1 =   "22:00:00";
 				$scope.dat = new Date($scope.startDate1+'T'+$scope.startTime1);
-				var nextDay = new Date($scope.dat);
-				nextDay.setDate($scope.dat.getDate()+1);
-				console.log(nextDay);
-				$scope.endDate = nextDay;
-				$scope.data.endTime = new Date($scope.endDate);
+				$scope.dat1 = new Date($scope.startDate1+'T'+$scope.endTime1);
+
+				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
 			}
 		if ($scope.data.chosendate1< new Date())
@@ -870,13 +881,12 @@ $scope.edittask= function(data)
 		else
 			{
 				$scope.startDate1 = $scope.data.chosendate.getUTCFullYear()+'-'+($scope.month)+'-'+$scope.date;
-				$scope.startTime1 =   "01:00:00";
+				$scope.startTime1 =   "11:00:00";
+				$scope.endTime1 =   "22:00:00";
 				$scope.dat = new Date($scope.startDate1+'T'+$scope.startTime1);
-				var nextDay = new Date($scope.dat);
-				nextDay.setDate($scope.dat.getDate()+1);
-				console.log(nextDay);
-				$scope.endDate = nextDay;
-				$scope.data.endTime = new Date($scope.endDate);
+				$scope.dat1 = new Date($scope.startDate1+'T'+$scope.endTime1);
+
+				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
 			}
 		if ($scope.data.chosendate< new Date())
@@ -933,6 +943,54 @@ $scope.edittask= function(data)
   {
 	  $scope.myProfile = true;
   }
+
+$scope.changepic = function()
+{
+	navigator.camera.getPicture(uploadPhoto, function(message) {
+ alert('get picture failed');
+ }, {
+ quality: 100,
+ destinationType: navigator.camera.DestinationType.FILE_URI,
+ sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
+ });
+}
+
+function uploadPhoto(imageURI) {
+ var options = new FileUploadOptions();
+ options.fileKey = "file";
+ options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+ options.mimeType = "image/jpeg";
+ console.log(options.fileName);
+ var params = new Object();
+ params.value1 = "test";
+ params.value2 = "param";
+ options.params = params;
+ options.chunkedMode = false;
+
+var ft = new FileTransfer();
+ ft.upload(imageURI, "http://moshfitness.london/diary/imageupload.php", function(result){
+ console.log(JSON.stringify(result));
+$scope.linke ="http://moshfitness.london/diary/uploaduserpicture.php?userPic="+result.data.image+"&token="+$rootScope.me['0'].token;
+$http.get($scope.linke).then(function (response) {
+	  
+	 setTimeout(function(){
+       $ionicLoading.show({
+      template: 'Profile Picture is changed'
+    });
+  },100);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },3000);	
+	  });
+
+
+ }, function(error){
+ console.log(JSON.stringify(error));
+ }, options);
+}
+
+
+
   console.log($scope.myProfile);
  $scope.linkw = "http://moshfitness.london/diary/user_profile.php?userId="+$scope.userId;
   console.log($scope.linkw);

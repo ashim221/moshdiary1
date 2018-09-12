@@ -123,6 +123,14 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
         obj: null
     }
   })
+.state('editadminevent', {
+    url: '/editadminevent',
+    templateUrl: 'templates/editadminevent.html',
+    controller: 'EditEventCtrl',
+    params: {
+        obj: null
+    }
+  })
   
 .state('usercalendar', {
     url: '/usercalendar',

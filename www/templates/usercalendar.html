@@ -5,8 +5,13 @@
 
 
 
-<ion-view view-title="{{userName}}" cache-view="false" hideBackButton ="true">
- <ion-nav-buttons side="right">
+<ion-view view-title="{{userName}}" cache-view="false">
+  <ion-nav-bar class="bar-balanced">
+     <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+            </button>
+  </ion-nav-bar>
+ <ion-nav-buttons side="right" class="bar-balanced">
             <button class="button" ng-disabled="isToday()" ng-click="today()">Today</button>
             <button class="button" ng-click="changeMode('month')">M</button>
             <button class="button" ng-click="changeMode('week')">W</button>

@@ -393,7 +393,7 @@ this.addEventUser = function(data){
 
 
 this.addAdminEventUser = function(data){
-	console.log(data);
+	console.log(data.token);
 	var q = data;
     var deferred = $q.defer();
 	$http({
@@ -423,7 +423,7 @@ this.addAdminEventUser = function(data){
  setTimeout(function(){
 	 $ionicLoading.hide();
   },5000);
-		$state.go('home',{}, {reload:true});
+		$state.go('usercalendar', {obj:q.user1});
       // success
 	// window.localStorage.setItem('count', 1);
     
@@ -448,7 +448,7 @@ this.addAdminEventUser = function(data){
 
 
 this.editEventUser = function(data){
-	console.log(data);
+	console.log(data.user);
 	var q = data;
     var deferred = $q.defer();
 	$http({
@@ -456,7 +456,7 @@ this.editEventUser = function(data){
   url: 'http://moshfitness.london/diary/editeventsuser.php',
   data: $httpParamSerializerJQLike({
       "token":q.token,
-      "chosendate":q.chosendate,
+      "chosendate":q.chosendate1,
 	  "starttime":q.startTime,
 	  "endtime":q.endTime,
 	  "eventname":q.eventname,
@@ -477,8 +477,15 @@ this.editEventUser = function(data){
   },100);
  setTimeout(function(){
 	 $ionicLoading.hide();
-  },1500);
+  },3000);
+ if (q.other===true)
+ {
+ 	$state.go('usercalendar',{obj:q.user});
+ }
+ else
+ {
 		$state.go('home',{}, {reload:true});
+		}
       // success
 	// window.localStorage.setItem('count', 1);
     

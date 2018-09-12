@@ -5,6 +5,11 @@
   The Notifications service returns an array of notifications data
 -->
 <ion-view view-title="Users">
+  <ion-nav-bar class="bar-balanced">
+     <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+            </button>
+  </ion-nav-bar>
   <ion-content>
     <div class="list notifications-list">
       <div class="item no-border" ng-repeat="user in users">
