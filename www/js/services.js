@@ -506,7 +506,58 @@ this.editEventUser = function(data){
     return deferred.promise;
   };
 
-
+this.deleteEventUser = function(data){
+	console.log(data.user);
+	var q = data;
+    var deferred = $q.defer();
+	$http({
+  method: 'POST',
+  url: 'http://moshfitness.london/diary/deleteeventsuser.php',
+  data: $httpParamSerializerJQLike({
+      "token":q.token,
+	  "eventId":q.eventId
+	  
+  }),
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+}).success(function (response) {
+		console.log(response);
+	if (!response.errors)
+	{
+		setTimeout(function(){
+       $ionicLoading.show({
+      template: 'Task Deleted successfully'
+    });
+  },50);
+ setTimeout(function(){
+	 $ionicLoading.hide();
+  },3500);
+ if (q.other===true)
+ {
+ 	$state.go('usercalendar',{obj:q.user});
+ }
+ else
+ {
+		$state.go('home',{}, {reload:true});
+		}
+      // success
+	// window.localStorage.setItem('count', 1);
+    
+      
+	}
+	else
+	{
+		console.log(response);
+		var errors_list = [],
+            error = {
+              code: response.errors['0'].code,
+              msg: response.errors['0'].message
+            };
+        errors_list.push(error);
+        deferred.reject(errors_list);
+	}
+});
+    return deferred.promise;
+  };
 
 	
 

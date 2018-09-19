@@ -81,6 +81,12 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
     controller: 'AuthCtrl'
   })
 
+.state('forgot', {
+    url: '/forgot',
+    templateUrl: 'templates/forgot.html',
+    controller: 'AuthCtrl'
+  })
+
   // register screen
   .state('register', {
     url: '/register',

@@ -1,4 +1,4 @@
-<ion-view view-title="Login" hide-nav-bar="true" class="login-bg">
+<ion-view view-title="Forgot Password" hide-nav-bar="true" class="login-bg">
   <ion-content>
     <!-- Logo -->
     <div class="padding text-center">
@@ -18,13 +18,9 @@
         <i class="ion-ios-email-outline light icon-label"></i>
         <input type="email" placeholder="Email" ng-model="user.email" required>
       </label>
-      <label class="item item-input">
-        <i class="ion-ios-locked-outline light icon-label"></i>
-        <input type="password" placeholder="Password" ng-model="user.password" required>
-      </label>
     </div>
     <div class="padding">
-      <button class="button button-block button-positive" ng-click="login(user)" ng-disabled="login_form.$invalid">
+      <button class="button button-block button-positive" ng-click="forgot(user)" ng-disabled="login_form.$invalid">
         Login
       </button>
     </div>
@@ -32,14 +28,7 @@
    
 
     <!-- Other links -->
-    <div class="padding row">
-      <div class="col">
-        <a class="light" ui-sref="forgot">Forgot password?</a>
-      </div>
-      <div class="col">
-        <a ui-sref="register" class="light">New here? Sign up</a>
-      </div>
-    </div>
+    
      
   </ion-content>
 </ion-view>
