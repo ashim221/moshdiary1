@@ -335,7 +335,7 @@ $scope.decline= function(user) {
 })
 
 .controller('AdminCtrl', function($scope, $rootScope, $http, $ionicLoading, AuthService, NotificationService,$state, $ionicPopup) {
-
+  
  $scope.adduser = function(user){
     $ionicLoading.show({
       template: 'Adding User ...'
@@ -370,9 +370,21 @@ $scope.decline= function(user) {
     .then(function (response) {
 			$scope.users = response.data.data;
 			console.log($scope.users);
-			
+
 
 		});
+    $scope.refresh = function()
+      {
+        $rootScope.me =  JSON.parse(window.localStorage.user);
+      console.log('refreshing');
+    var token = $rootScope.me['0'].token;
+  console.log("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token);
+  $http.get("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token)
+    .then(function (response) {
+      $scope.users = response.data.data;
+      console.log($scope.users);
+      });
+      }
   
 $scope.seecalendar = function(user)
 {
@@ -562,7 +574,7 @@ $scope.difference = new Date().getTimezoneOffset();
 		$scope.data.token = $rootScope.me['0'].token;
 		$scope.error = false;
 		console.log(data);
-		if ($scope.data.chosendate.getMonth()<10)
+		if ($scope.data.chosendate.getMonth()<9)
 					{
 						$scope.month = '0'+ ($scope.data.chosendate.getMonth()+1);
 					}
@@ -739,7 +751,7 @@ $scope.edittask= function(data)
 	{
 		console.log(data);
 		$scope.error = false;
-		if ($scope.data.chosendate1.getMonth()<10)
+		if ($scope.data.chosendate1.getMonth()<9)
 					{
 						$scope.month = '0'+ ($scope.data.chosendate1.getMonth()+1);
 					}
@@ -889,7 +901,7 @@ $scope.edittask= function(data)
 	{
 		$scope.error = false;
 		console.log(data);
-		if ($scope.data.chosendate.getMonth()<10)
+		if ($scope.data.chosendate.getMonth()<9)
 					{
 						$scope.month = '0'+ ($scope.data.chosendate.getMonth()+1);
 					}
