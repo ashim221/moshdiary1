@@ -253,7 +253,19 @@ this.doAddUser = function(user, token){
 		}
 		else
 		{
-        isLoggedIn = (authService.getUser(tok) !== null);
+			authService.getUser(tok).then(function(response)
+			{
+				console.log(response);
+				if(response===false)
+				{
+					isLoggedIn = false;
+				}
+				else
+				{
+					isLoggedIn = true;
+				}
+
+			});
 		}
     deferred.resolve(isLoggedIn);
 
@@ -507,7 +519,7 @@ this.editEventUser = function(data){
   };
 
 this.deleteEventUser = function(data){
-	console.log(data.user);
+	console.log(data);
 	var q = data;
     var deferred = $q.defer();
 	$http({
