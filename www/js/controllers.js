@@ -28,25 +28,6 @@ angular.module('starter.controllers', [])
       $ionicLoading.hide();
     });
   };
-
-  $scope.forgot = function(user){
-  	$scope.linkw = "http://moshfitness.london/diary/forgetpassword.php?email="+user.email;
-  	$http.get($scope.linkw).then(function (response) {
-	setTimeout(function(){
-       $ionicLoading.show({
-      template: 'Please check your email to reset the password. Please also check spam email if you do not recieve this email within 15 mins'
-    });
-  },100);
- setTimeout(function(){
-	 $ionicLoading.hide();
-	 $state.go('login');
-  },4000);
-
-	  $scope.userCeleb = response.data.record;
-	  console.log($scope.userCeleb);
-	 // $scope.twitterId = response.data.record['0'].twitterId;
-	  });
-  }
   
   
   $scope.logout = function(){
@@ -82,7 +63,7 @@ angular.module('starter.controllers', [])
  setTimeout(function(){
 	 $ionicLoading.hide();
 	 $state.go('login');
-  },3000);
+  },1500);
       
     },function(err){
       // error
@@ -334,6 +315,7 @@ $scope.decline= function(user) {
 
 })
 
+
 .controller('AdminCtrl', function($scope, $rootScope, $http, $ionicLoading, AuthService, NotificationService,$state, $ionicPopup) {
   
  $scope.adduser = function(user){
@@ -391,49 +373,7 @@ $scope.seecalendar = function(user)
 	$state.go('usercalendar', {obj:user});
 }
 
-$scope.delete= function(user) {
-	
-      var confirmPopup = $ionicPopup.confirm({
-         title: 'Decline '+user.userFullName,
-         template: 'Are you sure?'
-      });
 
-      confirmPopup.then(function(res) {
-         if(res) {
-            
-           NotificationService.declineUser(user.userId, $rootScope.me['0'].token)
-    .then(function(data){
-				$scope.notifications = data.data;
-				setTimeout(function(){
-       $ionicLoading.show({
-      template: 'User is deleted'
-    });
-  },100);
- setTimeout(function(){
-	 $ionicLoading.hide();
-
-	  $http.get("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token)
-    .then(function (response) {
-			$scope.users = response.data.data;
-			console.log($scope.users);
-			
-
-		});
-  },3000);	
- 					
-    },function(err){
-      // error
-	  //console.log(err);
-      //$scope.errors = err;
-      //$ionicLoading.hide();
-    }); 
-
-         } else {
-            console.log('Not sure!');
-         }
-      });
-		
-   };
 
 
 
@@ -643,7 +583,7 @@ $scope.difference = new Date().getTimezoneOffset();
 				console.log($scope.endTime);
 				$scope.data.endTime = new Date($scope.endTime);
 				$scope.data.startTime = new Date($scope.startTime);
-				$scope.compare = new Date($scope.startTime);
+			
 			}
 		else
 			{
@@ -655,9 +595,8 @@ $scope.difference = new Date().getTimezoneOffset();
 
 				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
-				$scope.compare = new Date($scope.dat1);
 			}
-		if ($scope.compare< new Date())
+		if ($scope.data.chosendate< new Date())
 			{
 				$scope.error = true;
 				setTimeout(function(){
@@ -704,7 +643,7 @@ $scope.difference = new Date().getTimezoneOffset();
 
 
 
-.controller('EditEventCtrl', function($scope, $rootScope, $http, $ionicPopup, $stateParams,$ionicLoading, AuthService, $state, $filter) {
+.controller('EditEventCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state, $filter) {
 	console.log($stateParams.obj);
 	$scope.data = [];
 	//$scope.eventdetail = $stateParams.obj;
@@ -718,35 +657,17 @@ $scope.difference = new Date().getTimezoneOffset();
 	$scope.data.user = $stateParams.obj.user;
 	$scope.data.other = $stateParams.obj.other;
 	$scope.data.token = $rootScope.me['0'].token;
+$scope.barcolour = function()
+{
+	if($scope.data.other)
+	{
+		return 'bar-balanced';
+	}
+	else
+	{
 
-$scope.delete=function(){
-var confirmPopup = $ionicPopup.confirm({
-	
-         title: $scope.data.eventname,
-         template: "Are you sure you want to delete this task?"
-        
-      });
-confirmPopup.then(function(res) {
-         if(res) {
-            
-           AuthService.deleteEventUser($scope.data)
-    .then(function(data){
-					
-					
-    },function(err){
-      // error
-	  //console.log(err);
-      //$scope.errors = err;
-      //$ionicLoading.hide();
-    });
-
-         } else {
-            
-         }
-      });
-
-};
-
+	}
+}
 $scope.edittask= function(data)
 	{
 		console.log(data);
@@ -818,7 +739,6 @@ $scope.edittask= function(data)
 				console.log($scope.endTime);
 				$scope.data.endTime = new Date($scope.endTime);
 				$scope.data.startTime = new Date($scope.startTime);
-				$scope.compare = new Date($scope.startTime);
 			
 			}
 		else
@@ -831,9 +751,8 @@ $scope.edittask= function(data)
 
 				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
-				$scope.compare = new Date($scope.dat1);
 			}
-		if ($scope.compare< new Date())
+		if ($scope.data.chosendate1< new Date())
 			{
 				$scope.error = true;
 				setTimeout(function(){
@@ -970,7 +889,6 @@ $scope.edittask= function(data)
 				console.log($scope.endTime);
 				$scope.data.endTime = new Date($scope.endTime);
 				$scope.data.startTime = new Date($scope.startTime);
-				$scope.compare = new Date($scope.startTime);
 			
 			}
 		else
@@ -983,9 +901,8 @@ $scope.edittask= function(data)
 
 				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
-				$scope.compare = new Date($scope.dat1);
 			}
-		if ($scope.compare< new Date())
+		if ($scope.data.chosendate< new Date())
 			{
 				$scope.error = true;
 				setTimeout(function(){
@@ -1029,7 +946,7 @@ $scope.edittask= function(data)
 })
 
 // UserCtrl controller
-.controller('UserCtrl', function($scope, $stateParams, $http, $state, AuthService, UserService, $rootScope, $ionicLoading) {
+.controller('UserCtrl', function($scope, $stateParams, $http, $state, AuthService, UserService, $rootScope) {
   // get contact from Contacts service
   // set the userId here
 	
@@ -1064,10 +981,12 @@ function uploadPhoto(imageURI) {
  options.chunkedMode = false;
 
 var ft = new FileTransfer();
-$link = "http://moshfitness.london/diary/imageupload.php?userId="+$scope.userId;
- ft.upload(imageURI, $link, function(result){
- //alert(JSON.stringify(result));
- setTimeout(function(){
+ ft.upload(imageURI, "http://moshfitness.london/diary/imageupload.php", function(result){
+ console.log(JSON.stringify(result));
+$scope.linke ="http://moshfitness.london/diary/uploaduserpicture.php?userPic="+result.data.image+"&token="+$rootScope.me['0'].token;
+$http.get($scope.linke).then(function (response) {
+	  
+	 setTimeout(function(){
        $ionicLoading.show({
       template: 'Profile Picture is changed'
     });
@@ -1075,11 +994,14 @@ $link = "http://moshfitness.london/diary/imageupload.php?userId="+$scope.userId;
  setTimeout(function(){
 	 $ionicLoading.hide();
   },3000);	
- $state.reload();
+	  });
+
+
  }, function(error){
  console.log(JSON.stringify(error));
  }, options);
-};
+}
+
 
 
   console.log($scope.myProfile);

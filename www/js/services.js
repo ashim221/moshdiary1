@@ -124,7 +124,7 @@ this.getNotifications = function(tok){
 
   
   
-.service('AuthService', function($q, $http, $httpParamSerializerJQLike, $cookies, $rootScope, $cookieStore, $cordovaFacebook, $ionicLoading, $state){
+.service('AuthService', function($q, $http, $httpParamSerializerJQLike, $cookies, $rootScope, $cookieStore, $cordovaFacebook, $ionicLoading, $state,$cordovaSQLite){
 	
 	var auth={
 		data:{
@@ -244,7 +244,8 @@ this.doAddUser = function(user, token){
 	  
     var deferred = $q.defer(),
         authService = this,
-		tok = window.localStorage.getItem('token');
+        tok = getToken();
+		//tok = window.localStorage.getItem('token');
 	  console.log(tok);
 		if (!tok)
 		{
@@ -327,10 +328,20 @@ this.doLogin = function(user){
 		console.log(response);
 	if (!response.errors)
 	{
+
 		auth.data.header = {headers: {'token': response.data.token}};
+
+        var query = "INSERT INTO people (token) VALUES (?)";
+        $cordovaSQLite.execute(db, query, [response.data.token]).then(function(res) {
+            console.log("INSERT ID -> " + res.insertId);
+        }, function (err) {
+            console.error(err);
+        });
+    
 		$cookies.put("token", response.data.token, 365);
+
 		auth.data.user = response.data;
-		window.localStorage.setItem('token', response.data.token);
+		//window.localStorage.setItem('token', response.data.token);
 		window.localStorage.user = JSON.stringify(auth.data.user);
 		$rootScope.me =  JSON.parse(window.localStorage.user);
 		console.log (auth.data.user);
@@ -350,7 +361,20 @@ this.doLogin = function(user){
 });
     return deferred.promise;
   };
-	
+
+this.getToken = function() {
+        var query = "SELECT token FROM people";
+        $cordovaSQLite.execute(db, query).then(function(res) {
+            if(res.rows.length > 0) {
+                console.log("SELECTED -> " + res.rows.item(0).token);
+            } else {
+                console.log("No results found");
+            }
+            return res.rows.item(0).token;
+        }, function (err) {
+            console.error(err);
+        });
+    }
 	
 this.addEventUser = function(data){
 	console.log(data);
@@ -518,6 +542,7 @@ this.editEventUser = function(data){
     return deferred.promise;
   };
 
+
 this.deleteEventUser = function(data){
 	console.log(data);
 	var q = data;
@@ -570,6 +595,7 @@ this.deleteEventUser = function(data){
 });
     return deferred.promise;
   };
+
 
 	
 
