@@ -22,9 +22,6 @@ angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-   var db = null;
-        db = $cordovaSQLite.openDB({ name: 'app.db',location:1}); 
-        $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS people (id integer primary key, token text)");
     AuthService.userIsLoggedIn().then(function(response)
     {
       if (response === true)

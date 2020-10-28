@@ -88,8 +88,8 @@ angular.module('starter.controllers', [])
 		var token = $rootScope.me['0'].token;
 		console.log(token);
 		AuthService.getUser(token).then(function (response) {});
-			console.log("http://moshfitness.london/diary/getuserevent.php?token="+token);
-		$http.get("http://moshfitness.london/diary/getuserevent.php?token="+token)
+			console.log("https://moshfitness.london/diary/getuserevent.php?token="+token);
+		$http.get("https://moshfitness.london/diary/getuserevent.php?token="+token)
     .then(function (response) {
 			$scope.event = response.data.event;
 			for (var ki=0;ki<$scope.event.length;ki++)
@@ -347,8 +347,8 @@ $scope.decline= function(user) {
   $rootScope.me =  JSON.parse(window.localStorage.user);
 			console.log($rootScope.me);
 		var token = $rootScope.me['0'].token;
-  console.log("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token);
-  $http.get("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token)
+  console.log("https://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token);
+  $http.get("https://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token)
     .then(function (response) {
 			$scope.users = response.data.data;
 			console.log($scope.users);
@@ -360,8 +360,8 @@ $scope.decline= function(user) {
         $rootScope.me =  JSON.parse(window.localStorage.user);
       console.log('refreshing');
     var token = $rootScope.me['0'].token;
-  console.log("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token);
-  $http.get("http://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token)
+  console.log("https://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token);
+  $http.get("https://moshfitness.london/diary/admingetusers.php?token="+$rootScope.me['0'].token)
     .then(function (response) {
       $scope.users = response.data.data;
       console.log($scope.users);
@@ -394,8 +394,8 @@ $scope.getEvents =function()
 	{
 		var token = $rootScope.me['0'].token;
 		console.log(token);
-			console.log("http://moshfitness.london/diary/getadminuserevents.php?token="+token+"&userId="+$scope.userId);
-		$http.get("http://moshfitness.london/diary/getadminuserevents.php?token="+token+"&userId="+$scope.userId)
+			console.log("https://moshfitness.london/diary/getadminuserevents.php?token="+token+"&userId="+$scope.userId);
+		$http.get("https://moshfitness.london/diary/getadminuserevents.php?token="+token+"&userId="+$scope.userId)
     .then(function (response) {
 			$scope.event = response.data.event;
 			for (var ki=0;ki<$scope.event.length;ki++)
@@ -501,13 +501,6 @@ $scope.data=[];
  $scope.data.chosendate = new Date($stateParams.obj2);
 
 $scope.data.user1 = $stateParams.obj1;
-
-
-
-$scope.difference = new Date().getTimezoneOffset();
-	
-	$scope.difference = $scope.difference/60;
-	console.log($scope.difference);
 	$scope.addtask= function(data)
 	{
 		$scope.data.userId = $stateParams.obj1.userId;
@@ -534,7 +527,7 @@ $scope.difference = new Date().getTimezoneOffset();
 		if (!data.all)
 			{
 				console.log($scope.data);
-				$scope.hourss = $scope.data.starttime.getUTCHours()+$scope.difference;
+				$scope.hourss = $scope.data.starttime.getUTCHours();
 				console.log($scope.hourss);
 				if ($scope.hourss<10)
 					{
@@ -553,7 +546,7 @@ $scope.difference = new Date().getTimezoneOffset();
 					{
 						$scope.startmin = $scope.data.starttime.getUTCMinutes();
 					}
-					$scope.endhourss = $scope.data.endtime.getUTCHours()+$scope.difference;
+					$scope.endhourss = $scope.data.endtime.getUTCHours();
 				
 				if ($scope.endhourss<10)
 					{
@@ -595,8 +588,13 @@ $scope.difference = new Date().getTimezoneOffset();
 
 				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
+				
 			}
-		if ($scope.data.chosendate< new Date())
+				 var d = new Date();
+  			d.setHours(01);
+  			console.log($scope.data.chosendate);
+			console.log(d);
+		if ($scope.data.chosendate< d)
 			{
 				$scope.error = true;
 				setTimeout(function(){
@@ -624,6 +622,8 @@ $scope.difference = new Date().getTimezoneOffset();
 			}
 		if ($scope.error===false)
 			{
+				$scope.data.endTime = $scope.data.endTime.toISOString();
+				$scope.data.startTime = $scope.data.startTime.toISOString();
 				console.log(data);
 				 AuthService.addAdminEventUser($scope.data)
     .then(function(data){
@@ -643,7 +643,7 @@ $scope.difference = new Date().getTimezoneOffset();
 
 
 
-.controller('EditEventCtrl', function($scope, $rootScope, $http, $stateParams,$ionicLoading, AuthService, $state, $filter) {
+.controller('EditEventCtrl', function($scope, $rootScope, $http, $ionicPopup, $stateParams,$ionicLoading, AuthService, $state, $filter) {
 	console.log($stateParams.obj);
 	$scope.data = [];
 	//$scope.eventdetail = $stateParams.obj;
@@ -752,7 +752,9 @@ $scope.edittask= function(data)
 				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
 			}
-		if ($scope.data.chosendate1< new Date())
+			 var d = new Date();
+  			 d.setHours(01);
+		if ($scope.data.chosendate1< d)
 			{
 				$scope.error = true;
 				setTimeout(function(){
@@ -780,6 +782,8 @@ $scope.edittask= function(data)
 			}
 		if ($scope.error===false)
 			{
+				$scope.data.endTime = $scope.data.endTime.toISOString();
+				$scope.data.startTime = $scope.data.startTime.toISOString();
 				console.log($scope.data);
 
 				 AuthService.editEventUser($scope.data)
@@ -795,6 +799,28 @@ $scope.edittask= function(data)
   }
 			};
 
+$scope.deleteEvent= function(data)
+{
+	var confirmPopup = $ionicPopup.confirm({
+         title: 'Delete this task?',
+         template: 'Are you sure?'
+      });
+
+      confirmPopup.then(function(res) {
+         if(res) {
+	 AuthService.deleteEventUser($scope.data)
+    .then(function(data){
+					
+					
+    },function(err){
+      // error
+	  //console.log(err);
+      //$scope.errors = err;
+      //$ionicLoading.hide();
+    });
+}
+});
+}
 
 
 
@@ -811,11 +837,6 @@ $scope.edittask= function(data)
 	
 	$scope.event = '';
 	$scope.data.chosendate = new Date($stateParams.obj);
-	
-	$scope.difference = new Date().getTimezoneOffset();
-	
-	$scope.difference = $scope.difference/60;
-	console.log($scope.difference);
 	$scope.addtask= function(data)
 	{
 		$scope.error = false;
@@ -840,7 +861,7 @@ $scope.edittask= function(data)
 		if (!data.all)
 			{
 				console.log($scope.data);
-				$scope.hourss = $scope.data.starttime.getUTCHours()+$scope.difference;
+				$scope.hourss = $scope.data.starttime.getUTCHours();
 				console.log($scope.hourss);
 				if ($scope.hourss<10)
 					{
@@ -859,7 +880,7 @@ $scope.edittask= function(data)
 					{
 						$scope.startmin = $scope.data.starttime.getUTCMinutes();
 					}
-					$scope.endhourss = $scope.data.endtime.getUTCHours()+$scope.difference;
+					$scope.endhourss = $scope.data.endtime.getUTCHours();
 				
 				if ($scope.endhourss<10)
 					{
@@ -902,7 +923,12 @@ $scope.edittask= function(data)
 				$scope.data.endTime = new Date($scope.dat1);
 				$scope.data.startTime = new Date($scope.dat);
 			}
-		if ($scope.data.chosendate< new Date())
+			
+			 var d = new Date();
+  			d.setHours(01);
+  			console.log($scope.data.chosendate);
+			console.log(d);
+		if ($scope.data.chosendate< d)
 			{
 				$scope.error = true;
 				setTimeout(function(){
@@ -930,6 +956,8 @@ $scope.edittask= function(data)
 			}
 		if ($scope.error===false)
 			{
+				$scope.data.endTime = $scope.data.endTime.toISOString();
+				$scope.data.startTime = $scope.data.startTime.toISOString();
 				console.log(data);
 				 AuthService.addEventUser(data)
     .then(function(data){
@@ -981,9 +1009,9 @@ function uploadPhoto(imageURI) {
  options.chunkedMode = false;
 
 var ft = new FileTransfer();
- ft.upload(imageURI, "http://moshfitness.london/diary/imageupload.php", function(result){
+ ft.upload(imageURI, "https://moshfitness.london/diary/imageupload.php", function(result){
  console.log(JSON.stringify(result));
-$scope.linke ="http://moshfitness.london/diary/uploaduserpicture.php?userPic="+result.data.image+"&token="+$rootScope.me['0'].token;
+$scope.linke ="https://moshfitness.london/diary/uploaduserpicture.php?userPic="+result.data.image+"&token="+$rootScope.me['0'].token;
 $http.get($scope.linke).then(function (response) {
 	  
 	 setTimeout(function(){
@@ -1005,7 +1033,7 @@ $http.get($scope.linke).then(function (response) {
 
 
   console.log($scope.myProfile);
- $scope.linkw = "http://moshfitness.london/diary/user_profile.php?userId="+$scope.userId;
+ $scope.linkw = "https://moshfitness.london/diary/user_profile.php?userId="+$scope.userId;
   console.log($scope.linkw);
  $scope.editDesc =false;
 	$scope.editName =false;

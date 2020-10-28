@@ -8,7 +8,7 @@ angular.module('starter.services', [])
 	  var deferred = $q.defer();
 	$http({
     method: 'POST',
-    url: 'http://moshfitness.london/diary/updateprofile.php',
+    url: 'https://moshfitness.london/diary/updateprofile.php',
     data: $httpParamSerializerJQLike({
 	  "description":info.description,
       "fullname":info.fullname,
@@ -34,7 +34,7 @@ this.getNotifications = function(tok){
 	  var deferred = $q.defer();
 	$http({
     method: 'POST',
-    url: 'http://moshfitness.london/diary/getnotifications.php',
+    url: 'https://moshfitness.london/diary/getnotifications.php',
     data: $httpParamSerializerJQLike({
 	  "token":tok
   }),
@@ -64,7 +64,7 @@ this.getNotifications = function(tok){
 	  var deferred = $q.defer();
 	$http({
     method: 'POST',
-    url: 'http://moshfitness.london/diary/declineuser.php',
+    url: 'https://moshfitness.london/diary/declineuser.php',
     data: $httpParamSerializerJQLike({
 	  "token":tok,
 	  "userId":uid
@@ -94,7 +94,7 @@ this.getNotifications = function(tok){
 	  var deferred = $q.defer();
 	$http({
     method: 'POST',
-    url: 'http://moshfitness.london/diary/acceptuser.php',
+    url: 'https://moshfitness.london/diary/acceptuser.php',
     data: $httpParamSerializerJQLike({
 	  "token":tok,
 	  "userId":uid
@@ -149,7 +149,7 @@ this.getNotifications = function(tok){
     console.log(user);
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/register_users.php',
+  url: 'https://moshfitness.london/diary/register_users.php',
   data: $httpParamSerializerJQLike({
 	  "name":user.name,
       "email":user.email,
@@ -182,7 +182,7 @@ this.doAddUser = function(user, token){
     console.log(user);
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/adminregister_users.php',
+  url: 'https://moshfitness.london/diary/adminregister_users.php',
   data: $httpParamSerializerJQLike({
 	  "name":user.name,
       "email":user.email,
@@ -216,7 +216,7 @@ this.doAddUser = function(user, token){
 	var tok = window.localStorage.getItem('token');
 	$http({
   method: 'GET',
-  url: 'http://moshfitness.london/diary/user_profile.php?userId='+result,
+  url: 'https://moshfitness.london/diary/user_profile.php?userId='+result,
   headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 }).success(function (response) {
 	if (!response.errors)
@@ -244,8 +244,8 @@ this.doAddUser = function(user, token){
 	  
     var deferred = $q.defer(),
         authService = this,
-        tok = getToken();
-		//tok = window.localStorage.getItem('token');
+       // tok = getToken();
+		tok = window.localStorage.getItem('token');
 	  console.log(tok);
 		if (!tok)
 		{
@@ -282,7 +282,7 @@ this.getUser = function(token){
 	{
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/auth.php',
+  url: 'https://moshfitness.london/diary/auth.php',
   data: $httpParamSerializerJQLike({
 	  "token":token
   }),
@@ -318,7 +318,7 @@ this.doLogin = function(user){
     var deferred = $q.defer();
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/authorise_users.php',
+  url: 'https://moshfitness.london/diary/authorise_users.php',
   data: $httpParamSerializerJQLike({
       "email":user.email,
       "password":user.password
@@ -330,13 +330,6 @@ this.doLogin = function(user){
 	{
 
 		auth.data.header = {headers: {'token': response.data.token}};
-
-        var query = "INSERT INTO people (token) VALUES (?)";
-        $cordovaSQLite.execute(db, query, [response.data.token]).then(function(res) {
-            console.log("INSERT ID -> " + res.insertId);
-        }, function (err) {
-            console.error(err);
-        });
     
 		$cookies.put("token", response.data.token, 365);
 
@@ -362,19 +355,7 @@ this.doLogin = function(user){
     return deferred.promise;
   };
 
-this.getToken = function() {
-        var query = "SELECT token FROM people";
-        $cordovaSQLite.execute(db, query).then(function(res) {
-            if(res.rows.length > 0) {
-                console.log("SELECTED -> " + res.rows.item(0).token);
-            } else {
-                console.log("No results found");
-            }
-            return res.rows.item(0).token;
-        }, function (err) {
-            console.error(err);
-        });
-    }
+
 	
 this.addEventUser = function(data){
 	console.log(data);
@@ -382,7 +363,7 @@ this.addEventUser = function(data){
     var deferred = $q.defer();
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/addeventsuser.php',
+  url: 'https://moshfitness.london/diary/addeventsuser.php',
   data: $httpParamSerializerJQLike({
       "token":q.token,
       "chosendate":q.chosendate,
@@ -434,11 +415,11 @@ this.addAdminEventUser = function(data){
     var deferred = $q.defer();
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/addadmineventsuser.php',
+  url: 'https://moshfitness.london/diary/addadmineventsuser.php',
   data: $httpParamSerializerJQLike({
       "token":q.token,
       "chosendate":q.chosendate,
-	  "starttime":q.startTime,
+	  "starttime":q.startTimeaddAdminEventUser,
 	  "endtime":q.endTime,
 	  "eventname":q.eventname,
 	  "eventdescription":q.eventdescription,
@@ -489,7 +470,7 @@ this.editEventUser = function(data){
     var deferred = $q.defer();
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/editeventsuser.php',
+  url: 'https://moshfitness.london/diary/editeventsuser.php',
   data: $httpParamSerializerJQLike({
       "token":q.token,
       "chosendate":q.chosendate1,
@@ -549,7 +530,7 @@ this.deleteEventUser = function(data){
     var deferred = $q.defer();
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/deleteeventsuser.php',
+  url: 'https://moshfitness.london/diary/deleteeventsuser.php',
   data: $httpParamSerializerJQLike({
       "token":q.token,
 	  "eventId":q.eventId
@@ -604,7 +585,7 @@ this.getEvents = function(token){
     var deferred = $q.defer();
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/getuserevent.php',
+  url: 'https://moshfitness.london/diary/getuserevent.php',
   data: $httpParamSerializerJQLike({
       "token":token
   }),
@@ -637,7 +618,7 @@ this.getEvents = function(token){
     var deferred = $q.defer();
 	$http({
   method: 'POST',
-  url: 'http://moshfitness.london/diary/logout.php',
+  url: 'https://moshfitness.london/diary/logout.php',
   data: $httpParamSerializerJQLike({
       "token": token
   }),
