@@ -419,7 +419,7 @@ this.addAdminEventUser = function(data){
   data: $httpParamSerializerJQLike({
       "token":q.token,
       "chosendate":q.chosendate,
-	  "starttime":q.startTimeaddAdminEventUser,
+	  "starttime":q.startTime,
 	  "endtime":q.endTime,
 	  "eventname":q.eventname,
 	  "eventdescription":q.eventdescription,

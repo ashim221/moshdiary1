@@ -987,16 +987,34 @@ $scope.deleteEvent= function(data)
 
 $scope.changepic = function()
 {
-	navigator.camera.getPicture(uploadPhoto, function(message) {
- alert('get picture failed');
- }, {
- quality: 100,
- destinationType: navigator.camera.DestinationType.FILE_URI,
- sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
- });
+	navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+    destinationType: Camera.DestinationType.FILE_URI });
+
+function onSuccess(imageURI) {
+    var image = document.getElementById('myImage');
+
+    image.src = imageURI;
+    var filenam = imageURI.substr(imageURI.lastIndexOf('/') + 1) + '.jpg';
+    var urli = "https://moshfitness.london/diary/imageupload.php?userId="+$scope.userId;
+	uploadFile(imageURI, filenam, urli,
+  (err, res) => {
+    if (err) {
+      console.error(err)
+    } else {
+      console.log(res)
+    }
+  })
 }
 
+function onFail(message) {
+    alert('Failed because: ' + message);
+}
+}
+/*
 function uploadPhoto(imageURI) {
+
+
+
  var options = new FileUploadOptions();
  options.fileKey = "file";
  options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
@@ -1028,7 +1046,53 @@ $http.get($scope.linke).then(function (response) {
  }, function(error){
  console.log(JSON.stringify(error));
  }, options);
+
+} */
+
+
+function uploadFile (localPath, fileName, remoteUrl, callback) {
+  // loads local file with http GET request
+  var xhrLocal = new XMLHttpRequest()
+  xhrLocal.open('get', localPath)
+  xhrLocal.responseType = 'blob'
+  xhrLocal.onerror = () => {
+    callback(Error('An error ocurred getting localpath on' + localPath))
+  }
+  xhrLocal.onload = () => {
+    // when data is loaded creates a file reader to read data
+    var fr = new FileReader()
+    fr.onload = function (e) {
+      // fetch the data and accept the blob
+      console.log(e)
+      fetch(e.target.result)
+        .then(res => res.blob())
+        .then((res) => {
+          // now creates another http post request to upload the file
+          var formData = new FormData()
+          formData.append('imagefile', res, fileName)
+          // post form data
+          const xhrRemote = new XMLHttpRequest()
+          xhrRemote.responseType = 'json'
+          // log response
+          xhrRemote.onerror = () => {
+            callback(Error('An error ocurred uploading the file to ' + remoteUrl))
+          }
+          xhrRemote.onload = () => {
+            if (typeof callback === 'function') {
+              callback(null, 'File uploaded successful, ' + xhrRemote.response)
+            }
+          }
+
+          // create and send the reqeust
+          xhrRemote.open('POST', remoteUrl)
+          xhrRemote.send(formData)
+        })
+    }
+    fr.readAsDataURL(xhrLocal.response) // async call
+  }
+  xhrLocal.send()
 }
+
 
 
 
