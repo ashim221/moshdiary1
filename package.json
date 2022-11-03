@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Mosh Diary",
   "devDependencies": {
-    "@ionic/v1-toolkit": "^1.0.0",
+    "@ionic/v1-toolkit": "^3.2.20",
     "cordova-android": "^9.0.0",
     "cordova-ios": "^6.2.0",
     "cordova-plugin-ionic-webview": "^5.0.0",
